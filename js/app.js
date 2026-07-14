@@ -42,6 +42,11 @@ const elements = {
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
     fileNameChosen: document.getElementById('file-name-chosen'),
+    adminCreateGroupCard: document.getElementById('admin-create-group-card'),
+    adminCreateGroupForm: document.getElementById('admin-create-group-form'),
+    generalCreateAreaCard: document.getElementById('general-create-area-card'),
+    generalCreateAreaForm: document.getElementById('general-create-area-form'),
+    generalAreaGroupLinkSelect: document.getElementById('general-area-group-link'),
     
     // Group Dashboard
     groupTitle: document.getElementById('group-title'),
@@ -410,6 +415,12 @@ function setupEventListeners() {
 
     // Register Member Form (Participant version)
     elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
+
+    // Admin: Create Group General Form
+    elements.adminCreateGroupForm?.addEventListener('submit', handleAdminCreateGroup);
+
+    // General: Create Area Form
+    elements.generalCreateAreaForm?.addEventListener('submit', handleGeneralCreateArea);
     
     // Listen for storage events (updates in mock DB across tabs or components)
     window.addEventListener('storage', () => {
@@ -636,6 +647,100 @@ async function handleGroupCreateArea(e) {
     }
 }
 
+// Handle new General/Group Leader creation by the Super Admin
+async function handleAdminCreateGroup(e) {
+    e.preventDefault();
+    
+    const groupName = document.getElementById('admin-group-name').value;
+    const leaderName = document.getElementById('admin-leader-name').value;
+    const email = document.getElementById('admin-email').value;
+    const phone = document.getElementById('admin-phone').value;
+    const district = document.getElementById('admin-district').value;
+    const password = document.getElementById('admin-password').value;
+
+    if (password.length < 6) {
+        showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+
+    try {
+        const allUsers = await db.getCollection('users');
+        if (allUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+            showToast('El correo ya está registrado', 'error');
+            return;
+        }
+
+        const newGroupLeader = {
+            uid: `usr-${Date.now()}`,
+            email: email,
+            password: password,
+            nombreGrupo: groupName,
+            liderName: leaderName,
+            telefono: phone,
+            distrito: district,
+            direccionReunion: 'Sede Principal',
+            rol: 'grupo' // Group Leader / General Leader
+        };
+
+        await db.addDoc('users', newGroupLeader);
+        showToast('¡Grupo General creado con éxito!', 'success');
+        elements.adminCreateGroupForm.reset();
+        loadGeneralDashboard();
+    } catch (err) {
+        showToast('Error al crear grupo general: ' + err.message, 'error');
+    }
+}
+
+// Handle new Area Leader creation by the General Leader / Super Admin
+async function handleGeneralCreateArea(e) {
+    e.preventDefault();
+    
+    const areaName = document.getElementById('general-area-name').value;
+    const leaderName = document.getElementById('general-area-leader').value;
+    const address = document.getElementById('general-area-address').value;
+    const email = document.getElementById('general-area-email').value;
+    const phone = document.getElementById('general-area-phone').value;
+    const district = document.getElementById('general-area-district').value;
+    const password = document.getElementById('general-area-password').value;
+    const groupLinkId = document.getElementById('general-area-group-link').value;
+
+    if (password.length < 6) {
+        showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+
+    try {
+        const allUsers = await db.getCollection('users');
+        if (allUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+            showToast('El correo del líder de área ya está registrado', 'error');
+            return;
+        }
+
+        const newAreaLeader = {
+            uid: `usr-${Date.now()}`,
+            email: email,
+            password: password,
+            nombreGrupo: areaName,
+            liderName: leaderName,
+            direccionReunion: address,
+            telefono: phone,
+            distrito: district,
+            rol: 'area',
+            grupoId: groupLinkId // Linked to selected Group Leader
+        };
+
+        await db.addDoc('users', newAreaLeader);
+        showToast('¡Área y Líder de Área creados con éxito!', 'success');
+        elements.generalCreateAreaForm.reset();
+        
+        loadGeneralDashboard();
+        populateHomeParticipantAreaSelect();
+        populateRegMemberAreaSelect();
+    } catch (err) {
+        showToast('Error al crear área: ' + err.message, 'error');
+    }
+}
+
 // --- LOGIN LOGIC ---
 async function handleLogin(e) {
     e.preventDefault();
@@ -682,6 +787,25 @@ async function loadGeneralDashboard() {
         const users = await db.getCollection('users');
         const themes = await db.getCollection('themes');
         const docs = await db.getCollection('documents');
+        
+        // Setup Super Admin Group creation form visibility
+        if (currentUser.rol === 'admin' && elements.adminCreateGroupCard) {
+            elements.adminCreateGroupCard.style.display = 'block';
+        } else if (elements.adminCreateGroupCard) {
+            elements.adminCreateGroupCard.style.display = 'none';
+        }
+        
+        // Populate supervisor general group links select
+        if (elements.generalAreaGroupLinkSelect) {
+            elements.generalAreaGroupLinkSelect.innerHTML = '<option value="" disabled selected>Selecciona el grupo supervisor</option>';
+            const groupLeaders = users.filter(u => u.rol === 'grupo');
+            groupLeaders.forEach(grp => {
+                const opt = document.createElement('option');
+                opt.value = grp.uid;
+                opt.textContent = `${grp.nombreGrupo} (${grp.liderName})`;
+                elements.generalAreaGroupLinkSelect.appendChild(opt);
+            });
+        }
         
         // 1. Calculate Metrics
         const totalReunited = meetings.reduce((sum, meet) => sum + parseInt(meet.miembrosReunidosCount || 0), 0);
