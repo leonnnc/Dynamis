@@ -850,13 +850,13 @@ select option {
     grid-template-columns: repeat(3, 1fr);
 }
 
-@media (max-width: 992px) {
+@media (max-width: 768px) {
     .metrics-grid-4, .metrics-grid-3 {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
     .metrics-grid-4, .metrics-grid-3 {
         grid-template-columns: 1fr;
     }
