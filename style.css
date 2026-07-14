@@ -836,12 +836,30 @@ select option {
     box-shadow: 0 0 6px var(--color-success);
 }
 
-/* METRICS GRID */
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
+}
+
+.metrics-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.metrics-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 992px) {
+    .metrics-grid-4, .metrics-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .metrics-grid-4, .metrics-grid-3 {
+        grid-template-columns: 1fr;
+    }
 }
 
 .metric-card {
