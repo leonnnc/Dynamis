@@ -4,6 +4,17 @@
 const INITIAL_MOCK_DATA = {
     users: [
         {
+            uid: "super-admin",
+            email: "admin@dynamis.com",
+            password: "AdminCDF26",
+            nombreGrupo: "Super Administración",
+            liderName: "Super Administrador",
+            direccionReunion: "Sede Central",
+            telefono: "999999999",
+            distrito: "Miraflores",
+            rol: "admin"
+        },
+        {
             uid: "gen-supremo",
             email: "general@dynamis.com",
             password: "general123",
@@ -72,14 +83,34 @@ let localDbStored = localStorage.getItem("dynamis_local_db");
 if (!localDbStored) {
     localStorage.setItem("dynamis_local_db", JSON.stringify(INITIAL_MOCK_DATA));
 } else {
-    // Self-healing migration to make sure area-surco-a has grupoId
+    // Self-healing migration to make sure area-surco-a has grupoId and admin is injected
     try {
         let dbParsed = JSON.parse(localDbStored);
+        
+        // 1. Check Sofía Ruiz group mapping
         let areaUser = dbParsed.users?.find(u => u.uid === "area-surco-a");
         if (areaUser && !areaUser.grupoId) {
             areaUser.grupoId = "grupo-surco";
-            localStorage.setItem("dynamis_local_db", JSON.stringify(dbParsed));
         }
+        
+        // 2. Check admin user existence
+        let adminUser = dbParsed.users?.find(u => u.email === "admin@dynamis.com");
+        if (!adminUser) {
+            if (!dbParsed.users) dbParsed.users = [];
+            dbParsed.users.push({
+                uid: "super-admin",
+                email: "admin@dynamis.com",
+                password: "AdminCDF26",
+                nombreGrupo: "Super Administración",
+                liderName: "Super Administrador",
+                direccionReunion: "Sede Central",
+                telefono: "999999999",
+                distrito: "Miraflores",
+                rol: "admin"
+            });
+        }
+        
+        localStorage.setItem("dynamis_local_db", JSON.stringify(dbParsed));
     } catch(e) {
         localStorage.setItem("dynamis_local_db", JSON.stringify(INITIAL_MOCK_DATA));
     }

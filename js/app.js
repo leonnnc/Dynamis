@@ -130,8 +130,8 @@ function handleRoute() {
         
         // Match dashboard to role
         const role = currentUser.rol;
-        if (sectionId === 'dashboard-general' && role !== 'general') {
-            window.location.hash = `#dashboard-${role}`;
+        if (sectionId === 'dashboard-general' && role !== 'general' && role !== 'admin') {
+            window.location.hash = `#dashboard-${role === 'admin' ? 'general' : role}`;
             return;
         }
         if (sectionId === 'dashboard-grupo' && role !== 'grupo') {
@@ -192,7 +192,7 @@ function updateNavState(isLoggedIn) {
         
         // Change login link in nav to point to dashboard
         elements.navLoginBtn.textContent = 'Dashboard';
-        elements.navLoginBtn.setAttribute('href', `#dashboard-${currentUser.rol}`);
+        elements.navLoginBtn.setAttribute('href', `#dashboard-${currentUser.rol === 'admin' ? 'general' : currentUser.rol}`);
         elements.navLoginBtn.classList.remove('hidden');
     } else {
         elements.navProfile.classList.add('hidden');
@@ -204,6 +204,7 @@ function updateNavState(isLoggedIn) {
 
 function getRoleName(role) {
     if (role === 'general') return 'Líder General';
+    if (role === 'admin') return 'Super Admin';
     if (role === 'grupo') return 'Líder de Grupo';
     if (role === 'area') return 'Líder de Área';
     return role;
@@ -421,7 +422,7 @@ async function handleLogin(e) {
         showToast(`Sesión iniciada como ${user.liderName}`, 'success');
         
         // Redirect to dashboard
-        window.location.hash = `#dashboard-${user.rol}`;
+        window.location.hash = `#dashboard-${user.rol === 'admin' ? 'general' : user.rol}`;
     } catch (err) {
         showToast('Error de autenticación: ' + err.message, 'error');
     }
