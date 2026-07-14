@@ -31,10 +31,6 @@ const elements = {
     areaMeetingForm: document.getElementById('area-meeting-form'),
     
     // General Dashboard
-    gmetricMembers: document.getElementById('gmetric-members'),
-    gmetricMeetings: document.getElementById('gmetric-meetings'),
-    gmetricGroups: document.getElementById('gmetric-groups'),
-    gmetricThemes: document.getElementById('gmetric-themes'),
     generalMeetingsTable: document.getElementById('general-meetings-table')?.querySelector('tbody'),
     generalMembersTable: document.getElementById('general-members-table')?.querySelector('tbody'),
     generalActiveUsers: document.getElementById('general-active-users'),
@@ -51,9 +47,6 @@ const elements = {
     // Group Dashboard
     groupTitle: document.getElementById('group-title'),
     groupWelcome: document.getElementById('group-welcome'),
-    groupMetricMembers: document.getElementById('group-metric-total-members'),
-    groupMetricMeetings: document.getElementById('group-metric-meetings'),
-    groupMetricAreas: document.getElementById('group-metric-areas'),
     groupAreasTable: document.getElementById('group-areas-table')?.querySelector('tbody'),
     groupMeetingsCompact: document.getElementById('group-meetings-compact'),
     groupCreateAreaForm: document.getElementById('group-create-area-form'),
@@ -61,9 +54,6 @@ const elements = {
     // Area Dashboard
     areaTitle: document.getElementById('area-title'),
     areaWelcome: document.getElementById('area-welcome'),
-    areaMetricMembers: document.getElementById('area-metric-members'),
-    areaMetricMeetings: document.getElementById('area-metric-meetings'),
-    areaMetricDistrict: document.getElementById('area-metric-district'),
     areaMembersList: document.getElementById('area-members-list'),
     areaMeetingsScheduled: document.getElementById('area-meetings-scheduled'),
     areaDownloadableDocs: document.getElementById('area-downloadable-docs'),
@@ -748,19 +738,6 @@ async function loadGeneralDashboard() {
                 elements.generalAreaGroupLinkSelect.appendChild(opt);
             });
         }
-        
-        // 1. Calculate Metrics
-        const totalReunited = meetings.reduce((sum, meet) => sum + parseInt(meet.miembrosReunidosCount || 0), 0);
-        const totalMeetings = meetings.length;
-        const totalGroups = users.filter(u => u.rol === 'grupo' || u.rol === 'area').length;
-        const totalThemes = themes.length;
-
-        // Render metrics
-        elements.gmetricMembers.textContent = totalReunited;
-        elements.gmetricMeetings.textContent = totalMeetings;
-        elements.gmetricGroups.textContent = totalGroups;
-        elements.gmetricThemes.textContent = totalThemes;
-
         // 2. Render Meetings Table
         elements.generalMeetingsTable.innerHTML = '';
         if (meetings.length === 0) {
@@ -960,11 +937,6 @@ async function loadGroupDashboard() {
         // Filter group members
         const groupMembers = allMembers.filter(mem => areaLeaderIds.includes(mem.areaLiderId));
 
-        // Update KPIs
-        elements.groupMetricMembers.textContent = groupMembers.length;
-        elements.groupMetricMeetings.textContent = groupMeetings.length;
-        elements.groupMetricAreas.textContent = areaLeaders.length;
-
         // Render Area Leaders Table
         elements.groupAreasTable.innerHTML = '';
         if (areaLeaders.length === 0) {
@@ -1024,8 +996,7 @@ async function loadAreaDashboard() {
     if (!currentUser) return;
 
     elements.areaTitle.textContent = `Líder de Área: ${currentUser.nombreGrupo}`;
-    elements.areaWelcome.textContent = `Gestión a cargo de: ${currentUser.liderName}`;
-    elements.areaMetricDistrict.textContent = currentUser.distrito;
+    elements.areaWelcome.textContent = `Gestión a cargo de: ${currentUser.liderName} • Distrito: ${currentUser.distrito}`;
 
     try {
         // Load data from DB
@@ -1039,10 +1010,6 @@ async function loadAreaDashboard() {
         // If user registered, it uses their unique uid.
         const myMembers = allMembers.filter(m => m.areaLiderId === currentUser.uid || (currentUser.uid.startsWith('usr-') && m.areaLiderId === currentUser.uid));
         const myMeetings = allMeetings.filter(meet => meet.areaLiderId === currentUser.uid);
-
-        // Update KPIs
-        elements.areaMetricMembers.textContent = myMembers.length;
-        elements.areaMetricMeetings.textContent = myMeetings.length;
 
         // 1. Populate Themes Selector
         elements.meetThemeSelect.innerHTML = `<option value="" disabled selected>Selecciona el tema oficial</option>`;
