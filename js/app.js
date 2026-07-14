@@ -23,6 +23,7 @@ const elements = {
     
     // Forms
     registerForm: document.getElementById('register-form'),
+    registerMemberForm: document.getElementById('register-member-form'),
     loginForm: document.getElementById('login-form'),
     generalThemeForm: document.getElementById('general-theme-form'),
     generalDocForm: document.getElementById('general-doc-form'),
@@ -397,6 +398,44 @@ function setupEventListeners() {
     // Area: Create Meeting Form
     elements.areaMeetingForm?.addEventListener('submit', handleCreateMeeting);
     
+    // Tabs Toggle for Register Section
+    const tabLeader = document.getElementById('tab-register-leader');
+    const tabMember = document.getElementById('tab-register-member');
+    
+    tabLeader?.addEventListener('click', () => {
+        tabLeader.classList.add('btn-primary', 'active');
+        tabLeader.classList.remove('btn-outline');
+        
+        tabMember?.classList.remove('btn-primary', 'active');
+        tabMember?.classList.add('btn-outline');
+        
+        elements.registerForm?.classList.remove('hidden');
+        elements.registerMemberForm?.classList.add('hidden');
+        
+        document.getElementById('register-section-title').textContent = 'Registrar Nuevo Grupo / Líder';
+        document.getElementById('register-section-desc').textContent = 'Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.';
+    });
+    
+    tabMember?.addEventListener('click', () => {
+        tabMember.classList.add('btn-primary', 'active');
+        tabMember.classList.remove('btn-outline');
+        
+        tabLeader?.classList.remove('btn-primary', 'active');
+        tabLeader?.classList.add('btn-outline');
+        
+        elements.registerForm?.classList.add('hidden');
+        elements.registerMemberForm?.classList.remove('hidden');
+        
+        document.getElementById('register-section-title').textContent = 'Unirse a un Grupo de Reuniones';
+        document.getElementById('register-section-desc').textContent = 'Ingresa tus datos personales y selecciona el área/grupo de Dynamis al que deseas unirte.';
+        
+        // Dynamically load active Area Groups
+        populateRegMemberAreaSelect();
+    });
+
+    // Register Member Form
+    elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
+    
     // Listen for storage events (updates in mock DB across tabs or components)
     window.addEventListener('storage', () => {
         const hash = window.location.hash || '#home';
@@ -455,6 +494,59 @@ async function handleRegister(e) {
         window.location.hash = '#login';
     } catch (err) {
         showToast('Error al registrar usuario: ' + err.message, 'error');
+    }
+}
+
+// Populate Area select dropdown with active Area Leaders from users collection
+async function populateRegMemberAreaSelect() {
+    const select = document.getElementById('reg-mem-area');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="" disabled selected>Selecciona tu área/grupo</option>';
+    try {
+        const allUsers = await db.getCollection('users');
+        const areaLeaders = allUsers.filter(u => u.rol === 'area');
+        
+        if (areaLeaders.length === 0) {
+            select.innerHTML = '<option value="" disabled>No hay áreas de reunión registradas aún</option>';
+        } else {
+            areaLeaders.forEach(leader => {
+                const opt = document.createElement('option');
+                opt.value = leader.uid;
+                opt.textContent = `${leader.nombreGrupo} (Líder: ${leader.liderName} - ${leader.distrito})`;
+                select.appendChild(opt);
+            });
+        }
+    } catch (e) {
+        console.error("Error loading areas for member registration:", e);
+        select.innerHTML = '<option value="" disabled>Error al cargar áreas</option>';
+    }
+}
+
+// Handle member registration submission
+async function handleRegisterMember(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('reg-mem-name').value;
+    const email = document.getElementById('reg-mem-email').value;
+    const phone = document.getElementById('reg-mem-phone').value;
+    const areaLiderId = document.getElementById('reg-mem-area').value;
+
+    try {
+        const newMember = {
+            areaLiderId: areaLiderId,
+            nombreCompleto: name,
+            correo: email || '',
+            telefono: phone,
+            estado: 'activo'
+        };
+
+        await db.addDoc('members', newMember);
+        showToast('¡Registro exitoso! Te has unido al grupo correctamente', 'success');
+        document.getElementById('register-member-form').reset();
+        window.location.hash = '#home';
+    } catch (err) {
+        showToast('Error al unirse al grupo: ' + err.message, 'error');
     }
 }
 
