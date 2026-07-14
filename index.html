@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamis - Gestión de Liderazgo y Reuniones</title>
+    <meta name="description" content="Dynamis es la plataforma definitiva para la gestión, comunicación y registro de grupos de liderazgo.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="header-container container">
+            <a href="#" class="logo" id="logo-btn">
+                <span class="logo-icon">D</span>
+                <span class="logo-text">Dynamis</span>
+            </a>
+            
+            <nav class="nav" id="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link active" data-section="home">Inicio</a></li>
+                    <li><a href="#register" class="nav-link" data-section="register">Registrar Grupo</a></li>
+                    <li><a href="#login" class="nav-link" data-section="login" id="nav-login-btn">Acceder</a></li>
+                    <!-- Profile indicator shown when logged in -->
+                    <li class="nav-profile-item hidden" id="nav-profile">
+                        <span class="profile-badge" id="profile-badge-role">Rol</span>
+                        <button class="btn btn-secondary btn-sm" id="logout-btn">Cerrar Sesión</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Sections -->
+    <main class="main-content container">
+
+        <!-- 1. HOME SECTION -->
+        <section id="home" class="app-section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <span class="badge">Liderazgo Efectivo</span>
+                    <h1>Conectando Líderes, Transformando Comunidades</h1>
+                    <p>Dynamis es el ecosistema digital diseñado para el registro, control de asistencia y comunicación directa de grupos de liderazgo distribuidos.</p>
+                    <div class="hero-actions">
+                        <a href="#register" class="btn btn-primary btn-lg" data-target="register">Registrar mi Grupo</a>
+                        <a href="#login" class="btn btn-outline btn-lg" data-target="login">Ver Dashboards</a>
+                    </div>
+                </div>
+                
+                <!-- Premium Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel" id="carousel">
+                        <div class="carousel-slides" id="carousel-slides">
+                            <div class="slide active">
+                                <img src="assets/carousel_1.png" alt="Reunión colaborativa Dynamis">
+                                <div class="slide-caption">
+                                    <h3>Colaboración Estratégica</h3>
+                                    <p>Toma de decisiones con líderes de toda la región.</p>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="assets/carousel_2.png" alt="Auditorio de capacitación">
+                                <div class="slide-caption">
+                                    <h3>Centros de Reunión</h3>
+                                    <p>Espacios modernos acondicionados para la enseñanza.</p>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="assets/carousel_3.png" alt="Huddle de equipo profesional">
+                                <div class="slide-caption">
+                                    <h3>Unión y Sinergia</h3>
+                                    <p>Líderes de áreas trabajando codo a codo.</p>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="assets/carousel_4.png" alt="Mapa digital de Lima">
+                                <div class="slide-caption">
+                                    <h3>Presencia en Lima Metropolitana</h3>
+                                    <p>Conectividad en los principales distritos.</p>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="assets/carousel_5.png" alt="Espacio de co-working moderno">
+                                <div class="slide-caption">
+                                    <h3>Crecimiento Continuo</h3>
+                                    <p>Espacios cómodos que inspiran a la acción.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-btn prev" id="carousel-prev" aria-label="Anterior">&lsaquo;</button>
+                        <button class="carousel-btn next" id="carousel-next" aria-label="Siguiente">&rsaquo;</button>
+                        <div class="carousel-dots" id="carousel-dots">
+                            <span class="dot active" data-slide="0"></span>
+                            <span class="dot" data-slide="1"></span>
+                            <span class="dot" data-slide="2"></span>
+                            <span class="dot" data-slide="3"></span>
+                            <span class="dot" data-slide="4"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Cards -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Control de Jerarquías</h3>
+                    <p>Estructura clara de Líder General, Líderes de Grupo y Líderes de Área para coordinar esfuerzos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Planificación de Reuniones</h3>
+                    <p>Registra fechas, horas y ubicaciones para tus reuniones semanales, con temas globales asignados.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                    </div>
+                    <h3>Material de Capacitación</h3>
+                    <p>El Líder General sube guías y documentos útiles que los líderes de área descargan al instante.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. REGISTER SECTION -->
+        <section id="register" class="app-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Registrar Nuevo Grupo / Líder</h2>
+                    <p>Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.</p>
+                </div>
+                <form id="register-form" class="auth-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="reg-group-name">Nombre del Grupo</label>
+                            <input type="text" id="reg-group-name" required placeholder="Ej. Dynamis San Isidro B">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-leader-name">Nombre y Apellido del Líder</label>
+                            <input type="text" id="reg-leader-name" required placeholder="Ej. Carlos Mendoza">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-address">Dirección de la Reunión</label>
+                            <input type="text" id="reg-address" required placeholder="Ej. Av. Arequipa 1230">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-email">Correo Electrónico</label>
+                            <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-phone">Teléfono / Celular</label>
+                            <input type="tel" id="reg-phone" required placeholder="Ej. 987654321">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-district">Distrito de Lima</label>
+                            <select id="reg-district" required>
+                                <option value="" disabled selected>Selecciona un distrito</option>
+                                <option value="Ancón">Ancón</option>
+                                <option value="Ate">Ate</option>
+                                <option value="Barranco">Barranco</option>
+                                <option value="Breña">Breña</option>
+                                <option value="Carabayllo">Carabayllo</option>
+                                <option value="Chaclacayo">Chaclacayo</option>
+                                <option value="Chorrillos">Chorrillos</option>
+                                <option value="Cieneguilla">Cieneguilla</option>
+                                <option value="Comas">Comas</option>
+                                <option value="El Agustino">El Agustino</option>
+                                <option value="Independencia">Independencia</option>
+                                <option value="Jesús María">Jesús María</option>
+                                <option value="La Molina">La Molina</option>
+                                <option value="La Victoria">La Victoria</option>
+                                <option value="Lima Centro">Lima Centro</option>
+                                <option value="Lince">Lince</option>
+                                <option value="Los Olivos">Los Olivos</option>
+                                <option value="Lurigancho-Chosica">Lurigancho-Chosica</option>
+                                <option value="Lurín">Lurín</option>
+                                <option value="Magdalena del Mar">Magdalena del Mar</option>
+                                <option value="Miraflores">Miraflores</option>
+                                <option value="Pachacámac">Pachacámac</option>
+                                <option value="Pucusana">Pucusana</option>
+                                <option value="Pueblo Libre">Pueblo Libre</option>
+                                <option value="Puente Piedra">Puente Piedra</option>
+                                <option value="Punta Hermosa">Punta Hermosa</option>
+                                <option value="Punta Negra">Punta Negra</option>
+                                <option value="Rímac">Rímac</option>
+                                <option value="San Bartolo">San Bartolo</option>
+                                <option value="San Borja">San Borja</option>
+                                <option value="San Isidro">San Isidro</option>
+                                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+                                <option value="San Juan de Miraflores">San Juan de Miraflores</option>
+                                <option value="San Luis">San Luis</option>
+                                <option value="San Martín de Porres">San Martín de Porres</option>
+                                <option value="San Miguel">San Miguel</option>
+                                <option value="Santa Anita">Santa Anita</option>
+                                <option value="Santa María del Mar">Santa María del Mar</option>
+                                <option value="Santa Rosa">Santa Rosa</option>
+                                <option value="Santiago de Surco">Santiago de Surco</option>
+                                <option value="Surquillo">Surquillo</option>
+                                <option value="Villa El Salvador">Villa El Salvador</option>
+                                <option value="Villa María del Triunfo">Villa María del Triunfo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-role">Nivel de Liderazgo</label>
+                            <select id="reg-role" required>
+                                <option value="area" selected>Líder de Área (Predeterminado)</option>
+                                <option value="grupo">Líder de Grupo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password">Contraseña</label>
+                            <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Crear Cuenta y Registrar</button>
+                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. LOGIN SECTION -->
+        <section id="login" class="app-section">
+            <div class="form-container form-container-sm">
+                <div class="form-header">
+                    <h2>Ingreso de Líderes</h2>
+                    <p>Ingresa tus credenciales para acceder a tu panel de administración.</p>
+                </div>
+                
+                <!-- Demo login helpers -->
+                <div class="demo-login-box">
+                    <h4>Cuentas de Prueba Rápida:</h4>
+                    <ul>
+                        <li><strong>Líder General:</strong> <code>general@dynamis.com</code> / <code>general123</code></li>
+                        <li><strong>Líder de Grupo:</strong> <code>grupo@dynamis.com</code> / <code>grupo123</code></li>
+                        <li><strong>Líder de Área:</strong> <code>area@dynamis.com</code> / <code>area123</code></li>
+                    </ul>
+                </div>
+
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" required placeholder="Ingresa tu contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                    <p class="auth-switch">¿No tienes cuenta? <a href="#register" data-target="register">Regístrate aquí</a></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 4. DASHBOARD - GENERAL LEADER (Líder General) -->
+        <section id="dashboard-general" class="app-section">
+            <div class="dashboard-header">
+                <div>
+                    <span class="badge badge-accent">Panel Administrativo</span>
+                    <h2>Dashboard General: Líder Supremo</h2>
+                    <p id="general-welcome">Bienvenido al control central de Dynamis</p>
+                </div>
+                <div class="dashboard-actions">
+                    <span class="last-sync-tag">Conectado a Firebase Database</span>
+                </div>
+            </div>
+
+            <!-- Global KPI Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val" id="gmetric-members">0</div>
+                    <div class="metric-label">Miembros Totales Reunidos</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="gmetric-meetings">0</div>
+                    <div class="metric-label">Reuniones Realizadas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="gmetric-groups">0</div>
+                    <div class="metric-label">Grupos Activos</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="gmetric-themes">0</div>
+                    <div class="metric-label">Temas Oficiales</div>
+                </div>
+            </div>
+
+            <!-- Two Column Layout: Main & Side -->
+            <div class="dashboard-grid">
+                <!-- Left: List of Meetings & Area Status -->
+                <div class="dash-main">
+                    <!-- Section: All Meetings -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Historial Global de Reuniones</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="general-meetings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha / Hora</th>
+                                        <th>Grupo</th>
+                                        <th>Distrito</th>
+                                        <th>Lugar de Reunión</th>
+                                        <th>Tema Tratado</th>
+                                        <th>Miembros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic content loaded via app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Theme Setup & Document Upload -->
+                <div class="dash-side">
+                    <!-- Card: Publish Weekly Theme -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Definir Tema de Reunión</h3>
+                        </div>
+                        <form id="general-theme-form" class="card-body">
+                            <div class="form-group">
+                                <label for="theme-title">Título del Tema</label>
+                                <input type="text" id="theme-title" required placeholder="Ej. El Valor de la Perseverancia">
+                            </div>
+                            <div class="form-group">
+                                <label for="theme-desc">Instrucciones / Puntos Clave</label>
+                                <textarea id="theme-desc" required placeholder="Breve resumen para los líderes..." rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Publicar Tema Oficial</button>
+                        </form>
+                    </div>
+
+                    <!-- Card: Upload Material (PDF / DOC) -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Compartir Documentos de Apoyo</h3>
+                        </div>
+                        <form id="general-doc-form" class="card-body">
+                            <div class="form-group">
+                                <label for="doc-title">Título de la Guía o Documento</label>
+                                <input type="text" id="doc-title" required placeholder="Ej. Guía Semanal - Julio 2026">
+                            </div>
+                            <div class="form-group">
+                                <label for="doc-file" class="file-label-btn">
+                                    <span>Seleccionar Archivo (Simulado)</span>
+                                    <input type="file" id="doc-file" required>
+                                </label>
+                                <span class="file-name-indicator" id="file-name-chosen">Ningún archivo seleccionado</span>
+                            </div>
+                            <button type="submit" class="btn btn-accent btn-sm btn-block">Subir y Publicar Material</button>
+                        </form>
+                        <div class="doc-list-small">
+                            <h4>Documentos Compartidos:</h4>
+                            <ul id="general-uploaded-docs">
+                                <!-- Loaded dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. DASHBOARD - GROUP LEADER (Líder de Grupo) -->
+        <section id="dashboard-grupo" class="app-section">
+            <div class="dashboard-header">
+                <div>
+                    <span class="badge badge-accent">Panel de Grupo</span>
+                    <h2 id="group-title">Dashboard: Líder de Grupo</h2>
+                    <p id="group-welcome">Supervisión de Áreas y Zonas asignadas</p>
+                </div>
+                <div>
+                    <span class="last-sync-tag">Conectado a Firebase Database</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val" id="group-metric-total-members">0</div>
+                    <div class="metric-label">Miembros Totales del Grupo</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="group-metric-meetings">0</div>
+                    <div class="metric-label">Reuniones de sus Áreas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="group-metric-areas">0</div>
+                    <div class="metric-label">Áreas Activas</div>
+                </div>
+            </div>
+
+            <!-- Two Column Layout: Main & Side -->
+            <div class="dashboard-grid">
+                <!-- Left: Area Leaders under this group -->
+                <div class="dash-main">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Líderes de Área Asignados</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="group-areas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Líder de Área</th>
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Distrito / Reunión</th>
+                                        <th>Total Miembros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Meeting Logs of areas -->
+                <div class="dash-side">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Reuniones Recientes de las Áreas</h3>
+                        </div>
+                        <div class="meeting-list-compact" id="group-meetings-compact">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. DASHBOARD - AREA LEADER (Líder de Área) -->
+        <section id="dashboard-area" class="app-section">
+            <div class="dashboard-header">
+                <div>
+                    <span class="badge badge-accent">Panel Operativo</span>
+                    <h2 id="area-title">Dashboard: Líder de Área</h2>
+                    <p id="area-welcome">Gestión de miembros y programación de reuniones</p>
+                </div>
+                <div>
+                    <span class="last-sync-tag">Conectado a Firebase Database</span>
+                </div>
+            </div>
+
+            <!-- Quick Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val" id="area-metric-members">0</div>
+                    <div class="metric-label">Miembros en el Área</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="area-metric-meetings">0</div>
+                    <div class="metric-label">Reuniones Programadas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="area-metric-district">--</div>
+                    <div class="metric-label">Distrito de Reunión</div>
+                </div>
+            </div>
+
+            <!-- Three Column Section Layout -->
+            <div class="dashboard-grid-three">
+                <!-- Column 1: Members Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Miembros del Área</h3>
+                    </div>
+                    <!-- Add member form -->
+                    <form id="area-member-form" class="card-body member-add-form">
+                        <div class="form-row">
+                            <input type="text" id="member-name" required placeholder="Nombre Completo">
+                            <input type="email" id="member-email" placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="form-row">
+                            <input type="tel" id="member-phone" required placeholder="Celular / WhatsApp">
+                            <button type="submit" class="btn btn-accent btn-sm">Agregar</button>
+                        </div>
+                    </form>
+                    <div class="member-list-wrapper">
+                        <ul class="member-list" id="area-members-list">
+                            <!-- Dynamic content -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Column 2: Create Meeting -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Programar Nueva Reunión</h3>
+                    </div>
+                    <form id="area-meeting-form" class="card-body">
+                        <div class="form-group">
+                            <label for="meet-theme">Tema de la Reunión</label>
+                            <select id="meet-theme" required>
+                                <option value="" disabled selected>Selecciona el tema oficial</option>
+                                <!-- Loaded dynamically from General Leader themes -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="meet-date">Fecha</label>
+                            <input type="date" id="meet-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="meet-time">Hora</label>
+                            <input type="time" id="meet-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="meet-location">Dirección de Reunión (Editable)</label>
+                            <input type="text" id="meet-location" required placeholder="Dirección física">
+                        </div>
+                        <div class="form-group">
+                            <label for="meet-expected-count">Cantidad de Miembros Asistentes</label>
+                            <input type="number" id="meet-expected-count" required min="1" placeholder="Ej. 12">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block">Programar Reunión</button>
+                    </form>
+                </div>
+
+                <!-- Column 3: Meetings & Materials -->
+                <div class="column-stack">
+                    <!-- Sub-card: Upcoming meetings and notify -->
+                    <div class="card flex-grow-1">
+                        <div class="card-header">
+                            <h3>Reuniones Programadas</h3>
+                        </div>
+                        <div class="meeting-schedule-list" id="area-meetings-scheduled">
+                            <!-- Dynamic meetings list with Notify buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Sub-card: Download resources -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Materiales y Guías Oficiales</h3>
+                        </div>
+                        <div class="document-download-list">
+                            <ul id="area-downloadable-docs">
+                                <!-- Documents uploaded by General Leader -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Dynamis. Todos los derechos reservados. Sistema de Gestión de Liderazgo.</p>
+            <div class="footer-links">
+                <a href="#home" data-target="home">Inicio</a>
+                <a href="#register" data-target="register">Registrar Grupo</a>
+                <a href="#login" data-target="login">Acceder</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase App and Services (ES Modules via CDN) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        }
+      }
+    </script>
+    <!-- App JavaScript files -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

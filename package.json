@@ -1,0 +1,21 @@
+{
+  "name": "dynamis-web",
+  "version": "1.0.0",
+  "description": "Plataforma de gestión de grupos de liderazgo y reuniones Dynamis",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 3000"
+  },
+  "keywords": [
+    "dynamis",
+    "liderazgo",
+    "firebase",
+    "html5",
+    "css3"
+  ],
+  "author": "Antigravity AI",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
