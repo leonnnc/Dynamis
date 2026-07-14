@@ -71,12 +71,35 @@ const elements = {
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Increment visit count on entry
+    let visits = parseInt(localStorage.getItem('dynamis_visits_count') || '0');
+    visits++;
+    localStorage.setItem('dynamis_visits_count', visits.toString());
+
     initRouter();
     initCarousel();
     initMobileNav();
     checkSession();
+    updateFooterStats();
     setupEventListeners();
 });
+
+// Update connection and visit counts in footer
+async function updateFooterStats() {
+    try {
+        const allUsers = await db.getCollection('users');
+        const onlineCount = allUsers.filter(u => u.conectado === true).length;
+        const visitsCount = localStorage.getItem('dynamis_visits_count') || '0';
+        
+        const onlineEl = document.getElementById('footer-online-count');
+        const visitsEl = document.getElementById('footer-visits-count');
+        
+        if (onlineEl) onlineEl.textContent = onlineCount;
+        if (visitsEl) visitsEl.textContent = visitsCount;
+    } catch (e) {
+        console.error("Error updating footer stats:", e);
+    }
+}
 
 // --- TOAST NOTIFICATIONS ---
 function showToast(message, type = 'info') {
@@ -196,6 +219,7 @@ async function setConnectionStatus(userId, isConnected) {
             conectado: isConnected, 
             ultimaConexion: isConnected ? timestamp : (currentUser?.ultimaConexion || '--')
         });
+        await updateFooterStats();
     } catch (e) {
         console.error("Error updating connection status:", e);
     }
@@ -379,6 +403,7 @@ function setupEventListeners() {
         if (hash === '#dashboard-general') loadGeneralDashboard();
         if (hash === '#dashboard-grupo') loadGroupDashboard();
         if (hash === '#dashboard-area') loadAreaDashboard();
+        updateFooterStats();
     });
 }
 
