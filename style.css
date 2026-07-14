@@ -867,7 +867,7 @@ select option {
     backdrop-filter: blur(var(--blur-intensity));
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
-    padding: 14px 20px;
+    padding: 8px 14px;
     box-shadow: var(--shadow-premium);
     text-align: left;
     position: relative;
@@ -885,18 +885,20 @@ select option {
 }
 
 .metric-val {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: #fff;
-    margin-bottom: 2px;
+    margin-bottom: 0px;
+    line-height: 1.2;
 }
 
 .metric-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-secondary);
+    line-height: 1.2;
 }
 
 /* GRID LAYOUTS */
