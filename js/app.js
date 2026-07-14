@@ -35,6 +35,7 @@ const elements = {
     gmetricGroups: document.getElementById('gmetric-groups'),
     gmetricThemes: document.getElementById('gmetric-themes'),
     generalMeetingsTable: document.getElementById('general-meetings-table')?.querySelector('tbody'),
+    generalMembersTable: document.getElementById('general-members-table')?.querySelector('tbody'),
     generalUploadedDocs: document.getElementById('general-uploaded-docs'),
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
@@ -504,6 +505,29 @@ async function loadGeneralDashboard() {
                 });
                 
                 elements.generalUploadedDocs.appendChild(li);
+            });
+        }
+
+        // 4. Render Members Table
+        elements.generalMembersTable.innerHTML = '';
+        if (members.length === 0) {
+            elements.generalMembersTable.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay miembros registrados aún.</td></tr>`;
+        } else {
+            members.forEach(mem => {
+                const leader = users.find(u => u.uid === mem.areaLiderId);
+                const leaderName = leader ? leader.liderName : 'Desconocido';
+                const groupName = leader ? leader.nombreGrupo : 'Sin grupo';
+                const district = leader ? leader.distrito : 'Sin distrito';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${mem.nombreCompleto}</strong></td>
+                    <td>${mem.telefono}<br><span style="font-size:0.8rem;color:var(--color-text-muted)">${mem.correo || 'Sin correo'}</span></td>
+                    <td>${groupName}<br><span class="profile-badge">${district}</span></td>
+                    <td><strong>${leaderName}</strong></td>
+                    <td><span class="profile-badge" style="background:hsla(145, 80%, 40%, 0.15);color:var(--color-success);border-color:hsla(145, 80%, 40%, 0.3);text-transform:uppercase;font-size:0.7rem">${mem.estado || 'activo'}</span></td>
+                `;
+                elements.generalMembersTable.appendChild(tr);
             });
         }
 
