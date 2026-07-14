@@ -57,7 +57,6 @@ const elements = {
     groupAreasTable: document.getElementById('group-areas-table')?.querySelector('tbody'),
     groupMeetingsCompact: document.getElementById('group-meetings-compact'),
     groupCreateAreaForm: document.getElementById('group-create-area-form'),
-    homeParticipantRegisterForm: document.getElementById('home-participant-register-form'),
     
     // Area Dashboard
     areaTitle: document.getElementById('area-title'),
@@ -89,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     checkSession();
     updateFooterStats();
-    populateHomeParticipantAreaSelect();
     populateRegMemberAreaSelect();
     setupEventListeners();
 });
@@ -410,9 +408,6 @@ function setupEventListeners() {
     // Group: Create Area Form
     elements.groupCreateAreaForm?.addEventListener('submit', handleGroupCreateArea);
 
-    // Home: Participant Register Form
-    elements.homeParticipantRegisterForm?.addEventListener('submit', handleHomeParticipantRegister);
-
     // Register Member Form (Participant version)
     elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
 
@@ -429,7 +424,6 @@ function setupEventListeners() {
         if (hash === '#dashboard-grupo') loadGroupDashboard();
         if (hash === '#dashboard-area') loadAreaDashboard();
         updateFooterStats();
-        populateHomeParticipantAreaSelect();
         populateRegMemberAreaSelect();
     });
 }
@@ -485,60 +479,7 @@ async function handleRegister(e) {
     }
 }
 
-// Populate Area select dropdown with active Area Leaders from users collection (Home Page)
-async function populateHomeParticipantAreaSelect() {
-    const select = document.getElementById('home-mem-area');
-    if (!select) return;
-    
-    select.innerHTML = '<option value="" disabled selected>Selecciona tu área/grupo de reuniones</option>';
-    try {
-        const allUsers = await db.getCollection('users');
-        const areaLeaders = allUsers.filter(u => u.rol === 'area');
-        
-        if (areaLeaders.length === 0) {
-            select.innerHTML = '<option value="" disabled>No hay áreas de reunión registradas aún</option>';
-        } else {
-            areaLeaders.forEach(leader => {
-                const opt = document.createElement('option');
-                opt.value = leader.uid;
-                opt.textContent = `${leader.nombreGrupo} (Líder: ${leader.liderName} - ${leader.distrito})`;
-                select.appendChild(opt);
-            });
-        }
-    } catch (e) {
-        console.error("Error loading areas for participant registration:", e);
-        select.innerHTML = '<option value="" disabled>Error al cargar áreas</option>';
-    }
-}
 
-// Handle participant registration directly from the home page
-async function handleHomeParticipantRegister(e) {
-    e.preventDefault();
-    
-    const name = document.getElementById('home-mem-name').value;
-    const email = document.getElementById('home-mem-email').value;
-    const phone = document.getElementById('home-mem-phone').value;
-    const areaLiderId = document.getElementById('home-mem-area').value;
-
-    try {
-        const newParticipant = {
-            areaLiderId: areaLiderId,
-            nombreCompleto: name,
-            correo: email || '',
-            telefono: phone,
-            estado: 'activo'
-        };
-
-        await db.addDoc('members', newParticipant);
-        showToast('¡Registro exitoso! Te has unido al grupo correctamente', 'success');
-        elements.homeParticipantRegisterForm.reset();
-        
-        // Update general dashboard or footer connection stats in real-time
-        updateFooterStats();
-    } catch (err) {
-        showToast('Error al registrarse en el grupo: ' + err.message, 'error');
-    }
-}
 
 // Populate Area select dropdown with active Area Leaders from users collection (Tab Version)
 async function populateRegMemberAreaSelect() {
@@ -640,8 +581,8 @@ async function handleGroupCreateArea(e) {
         
         // Reload dashboard areas list
         loadGroupDashboard();
-        // Reload dropdown on Home page
-        populateHomeParticipantAreaSelect();
+        // Reload dropdown on registration page
+        populateRegMemberAreaSelect();
     } catch (err) {
         showToast('Error al crear el área de reunión: ' + err.message, 'error');
     }
@@ -734,7 +675,6 @@ async function handleGeneralCreateArea(e) {
         elements.generalCreateAreaForm.reset();
         
         loadGeneralDashboard();
-        populateHomeParticipantAreaSelect();
         populateRegMemberAreaSelect();
     } catch (err) {
         showToast('Error al crear área: ' + err.message, 'error');
