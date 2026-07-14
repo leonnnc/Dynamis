@@ -514,6 +514,7 @@ async function handleRegisterMember(e) {
     const name = document.getElementById('reg-mem-name').value;
     const email = document.getElementById('reg-mem-email').value;
     const phone = document.getElementById('reg-mem-phone').value;
+    const district = document.getElementById('reg-mem-district').value;
     const areaLiderId = document.getElementById('reg-mem-area').value;
 
     try {
@@ -522,6 +523,7 @@ async function handleRegisterMember(e) {
             nombreCompleto: name,
             correo: email || '',
             telefono: phone,
+            distrito: district,
             estado: 'activo'
         };
 
@@ -819,7 +821,7 @@ async function loadGeneralDashboard() {
                 const leader = users.find(u => u.uid === mem.areaLiderId);
                 const leaderName = leader ? leader.liderName : 'Desconocido';
                 const groupName = leader ? leader.nombreGrupo : 'Sin grupo';
-                const district = leader ? leader.distrito : 'Sin distrito';
+                const district = mem.distrito || (leader ? leader.distrito : 'Sin distrito');
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1072,7 +1074,7 @@ async function loadAreaDashboard() {
                 li.innerHTML = `
                     <div class="member-info">
                         <span class="member-name">${mem.nombreCompleto}</span>
-                        <span class="member-phone-email">${mem.telefono} • ${mem.correo || 'Sin correo'}</span>
+                        <span class="member-phone-email">${mem.telefono} • ${mem.correo || 'Sin correo'} • <span class="profile-badge" style="font-size:0.75rem;padding:2px 6px;">${mem.distrito || currentUser.distrito}</span></span>
                     </div>
                     <button class="btn-delete-member" data-id="${mem.id}" aria-label="Eliminar participante">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
@@ -1202,6 +1204,7 @@ async function handleAddMember(e) {
             nombreCompleto: name,
             correo: email || '',
             telefono: phone,
+            distrito: currentUser.distrito,
             estado: 'activo'
         };
 
