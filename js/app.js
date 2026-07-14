@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSession();
     updateFooterStats();
     populateHomeParticipantAreaSelect();
+    populateRegMemberAreaSelect();
     setupEventListeners();
 });
 
@@ -407,42 +408,7 @@ function setupEventListeners() {
     // Home: Participant Register Form
     elements.homeParticipantRegisterForm?.addEventListener('submit', handleHomeParticipantRegister);
 
-    // Tabs Toggle for Register Section
-    const tabLeader = document.getElementById('tab-register-leader');
-    const tabMember = document.getElementById('tab-register-member');
-    
-    tabLeader?.addEventListener('click', () => {
-        tabLeader.classList.add('btn-primary', 'active');
-        tabLeader.classList.remove('btn-outline');
-        
-        tabMember?.classList.remove('btn-primary', 'active');
-        tabMember?.classList.add('btn-outline');
-        
-        elements.registerForm?.classList.remove('hidden');
-        elements.registerMemberForm?.classList.add('hidden');
-        
-        document.getElementById('register-section-title').textContent = 'Registrar Nuevo Grupo / Líder';
-        document.getElementById('register-section-desc').textContent = 'Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.';
-    });
-    
-    tabMember?.addEventListener('click', () => {
-        tabMember.classList.add('btn-primary', 'active');
-        tabMember.classList.remove('btn-outline');
-        
-        tabLeader?.classList.remove('btn-primary', 'active');
-        tabLeader?.classList.add('btn-outline');
-        
-        elements.registerForm?.classList.add('hidden');
-        elements.registerMemberForm?.classList.remove('hidden');
-        
-        document.getElementById('register-section-title').textContent = 'Unirse a un Grupo / Área';
-        document.getElementById('register-section-desc').textContent = 'Ingresa tus datos personales y selecciona el área/grupo de Dynamis al que deseas unirte.';
-        
-        // Dynamically load active Area Groups into the tab registration form
-        populateRegMemberAreaSelect();
-    });
-
-    // Register Member Form (Tab version)
+    // Register Member Form (Participant version)
     elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
     
     // Listen for storage events (updates in mock DB across tabs or components)
@@ -453,6 +419,7 @@ function setupEventListeners() {
         if (hash === '#dashboard-area') loadAreaDashboard();
         updateFooterStats();
         populateHomeParticipantAreaSelect();
+        populateRegMemberAreaSelect();
     });
 }
 

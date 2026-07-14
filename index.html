@@ -191,106 +191,12 @@
         <section id="register" class="app-section">
             <div class="form-container">
                 <div class="form-header">
-                    <h2 id="register-section-title">Registro en la Plataforma</h2>
-                    <p id="register-section-desc">Regístrate como nuevo Líder de Grupo/Área o únete como Participante a un área existente.</p>
+                    <h2>Registro de Participantes</h2>
+                    <p>Únete a un grupo de reuniones ingresando tus datos personales a continuación.</p>
                 </div>
 
-                <!-- Tabs selector -->
-                <div class="register-tabs" style="display:flex; justify-content:center; gap:16px; margin-bottom:30px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
-                    <button class="btn btn-primary tab-btn active" id="tab-register-leader" type="button" style="flex:1; max-width:200px;">Soy Líder</button>
-                    <button class="btn btn-outline tab-btn" id="tab-register-member" type="button" style="flex:1; max-width:200px;">Soy Participante</button>
-                </div>
-
-                <!-- FORM 1: LEADER REGISTRATION (Existing form) -->
-                <form id="register-form" class="auth-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reg-group-name">Nombre del Grupo</label>
-                            <input type="text" id="reg-group-name" required placeholder="Ej. Dynamis San Isidro B">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-leader-name">Nombre y Apellido del Líder</label>
-                            <input type="text" id="reg-leader-name" required placeholder="Ej. Carlos Mendoza">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-address">Dirección de la Reunión</label>
-                            <input type="text" id="reg-address" required placeholder="Ej. Av. Arequipa 1230">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-email">Correo Electrónico</label>
-                            <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-phone">Teléfono / Celular</label>
-                            <input type="tel" id="reg-phone" required placeholder="Ej. 987654321">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-district">Distrito de Lima</label>
-                            <select id="reg-district" required>
-                                <option value="" disabled selected>Selecciona un distrito</option>
-                                <option value="Ancón">Ancón</option>
-                                <option value="Ate">Ate</option>
-                                <option value="Barranco">Barranco</option>
-                                <option value="Breña">Breña</option>
-                                <option value="Carabayllo">Carabayllo</option>
-                                <option value="Chaclacayo">Chaclacayo</option>
-                                <option value="Chorrillos">Chorrillos</option>
-                                <option value="Cieneguilla">Cieneguilla</option>
-                                <option value="Comas">Comas</option>
-                                <option value="El Agustino">El Agustino</option>
-                                <option value="Independencia">Independencia</option>
-                                <option value="Jesús María">Jesús María</option>
-                                <option value="La Molina">La Molina</option>
-                                <option value="La Victoria">La Victoria</option>
-                                <option value="Lima Centro">Lima Centro</option>
-                                <option value="Lince">Lince</option>
-                                <option value="Los Olivos">Los Olivos</option>
-                                <option value="Lurigancho-Chosica">Lurigancho-Chosica</option>
-                                <option value="Lurín">Lurín</option>
-                                <option value="Magdalena del Mar">Magdalena del Mar</option>
-                                <option value="Miraflores">Miraflores</option>
-                                <option value="Pachacámac">Pachacámac</option>
-                                <option value="Pucusana">Pucusana</option>
-                                <option value="Pueblo Libre">Pueblo Libre</option>
-                                <option value="Puente Piedra">Puente Piedra</option>
-                                <option value="Punta Hermosa">Punta Hermosa</option>
-                                <option value="Punta Negra">Punta Negra</option>
-                                <option value="Rímac">Rímac</option>
-                                <option value="San Bartolo">San Bartolo</option>
-                                <option value="San Borja">San Borja</option>
-                                <option value="San Isidro">San Isidro</option>
-                                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
-                                <option value="San Juan de Miraflores">San Juan de Miraflores</option>
-                                <option value="San Luis">San Luis</option>
-                                <option value="San Martín de Porres">San Martín de Porres</option>
-                                <option value="San Miguel">San Miguel</option>
-                                <option value="Santa Anita">Santa Anita</option>
-                                <option value="Santa María del Mar">Santa María del Mar</option>
-                                <option value="Santa Rosa">Santa Rosa</option>
-                                <option value="Santiago de Surco">Santiago de Surco</option>
-                                <option value="Surquillo">Surquillo</option>
-                                <option value="Villa El Salvador">Villa El Salvador</option>
-                                <option value="Villa María del Triunfo">Villa María del Triunfo</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-role">Nivel de Liderazgo</label>
-                            <select id="reg-role" required>
-                                <option value="area" selected>Líder de Área (Predeterminado)</option>
-                                <option value="grupo">Líder de Grupo</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-password">Contraseña</label>
-                            <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Crear Cuenta y Registrar</button>
-                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
-                </form>
-
-                <!-- FORM 2: PARTICIPANT REGISTRATION (New form) -->
-                <form id="register-member-form" class="auth-form hidden">
+                <!-- FORM: PARTICIPANT REGISTRATION -->
+                <form id="register-member-form" class="auth-form">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="reg-mem-name">Nombre y Apellido del Participante</label>
@@ -312,7 +218,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-accent btn-block">Registrarse en el Grupo</button>
-                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
+                    <p class="auth-switch">¿Eres líder? <a href="#login" data-target="login">Accede a tu panel aquí</a></p>
                 </form>
             </div>
         </section>
