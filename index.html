@@ -27,7 +27,7 @@
             <nav class="nav" id="nav-menu">
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link active" data-section="home">Inicio</a></li>
-                    <li><a href="#register" class="nav-link" data-section="register">Registrar Grupo</a></li>
+                    <li><a href="#register" class="nav-link" data-section="register">Registrarse</a></li>
                     <li><a href="#login" class="nav-link" data-section="login" id="nav-login-btn">Acceder</a></li>
                     <!-- Profile indicator shown when logged in -->
                     <li class="nav-profile-item hidden" id="nav-profile">
@@ -191,11 +191,17 @@
         <section id="register" class="app-section">
             <div class="form-container">
                 <div class="form-header">
-                    <h2>Registrar Nuevo Grupo / Líder</h2>
-                    <p>Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.</p>
+                    <h2 id="register-section-title">Registro en la Plataforma</h2>
+                    <p id="register-section-desc">Regístrate como nuevo Líder de Grupo/Área o únete como Participante a un área existente.</p>
                 </div>
 
-                <!-- FORM: LEADER REGISTRATION -->
+                <!-- Tabs selector -->
+                <div class="register-tabs" style="display:flex; justify-content:center; gap:16px; margin-bottom:30px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
+                    <button class="btn btn-primary tab-btn active" id="tab-register-leader" type="button" style="flex:1; max-width:200px;">Soy Líder</button>
+                    <button class="btn btn-outline tab-btn" id="tab-register-member" type="button" style="flex:1; max-width:200px;">Soy Participante</button>
+                </div>
+
+                <!-- FORM 1: LEADER REGISTRATION (Existing form) -->
                 <form id="register-form" class="auth-form">
                     <div class="form-grid">
                         <div class="form-group">
@@ -280,6 +286,32 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Crear Cuenta y Registrar</button>
+                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
+                </form>
+
+                <!-- FORM 2: PARTICIPANT REGISTRATION (New form) -->
+                <form id="register-member-form" class="auth-form hidden">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="reg-mem-name">Nombre y Apellido del Participante</label>
+                            <input type="text" id="reg-mem-name" required placeholder="Ej. Juan Gómez">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-mem-email">Correo Electrónico (Opcional)</label>
+                            <input type="email" id="reg-mem-email" placeholder="juan.gomez@correo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-mem-phone">Teléfono / Celular</label>
+                            <input type="tel" id="reg-mem-phone" required placeholder="Ej. 987654321">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-mem-area">Grupo / Área al que se une</label>
+                            <select id="reg-mem-area" required>
+                                <option value="" disabled selected>Cargando áreas disponibles...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-block">Registrarse en el Grupo</button>
                     <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
                 </form>
             </div>
