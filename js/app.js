@@ -38,11 +38,10 @@ const elements = {
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
     fileNameChosen: document.getElementById('file-name-chosen'),
-    adminCreateGroupCard: document.getElementById('admin-create-group-card'),
-    adminCreateGroupForm: document.getElementById('admin-create-group-form'),
-    generalCreateAreaCard: document.getElementById('general-create-area-card'),
-    generalCreateAreaForm: document.getElementById('general-create-area-form'),
-    generalAreaGroupLinkSelect: document.getElementById('general-area-group-link'),
+    unifiedRegCard: document.getElementById('unified-registration-card'),
+    unifiedRegForm: document.getElementById('unified-registration-form'),
+    unifiedRoleSelect: document.getElementById('unified-role'),
+    unifiedGroupLinkSelect: document.getElementById('unified-group-link'),
     
     // Group Dashboard
     groupTitle: document.getElementById('group-title'),
@@ -401,11 +400,38 @@ function setupEventListeners() {
     // Register Member Form (Participant version)
     elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
 
-    // Admin: Create Group General Form
-    elements.adminCreateGroupForm?.addEventListener('submit', handleAdminCreateGroup);
+    // Unified: Role selection change listener
+    elements.unifiedRoleSelect?.addEventListener('change', (e) => {
+        const isArea = e.target.value === 'area';
+        const addressGroup = document.getElementById('unified-address-group');
+        const linkGroup = document.getElementById('unified-group-link-group');
+        const addressInput = document.getElementById('unified-address');
+        const linkSelect = document.getElementById('unified-group-link');
+        const labelGroupName = document.getElementById('label-group-name');
+        const labelLeaderName = document.getElementById('label-leader-name');
+        const btnText = document.getElementById('unified-btn-text');
 
-    // General: Create Area Form
-    elements.generalCreateAreaForm?.addEventListener('submit', handleGeneralCreateArea);
+        if (isArea) {
+            addressGroup.style.display = 'block';
+            linkGroup.style.display = 'block';
+            addressInput.required = true;
+            linkSelect.required = true;
+            labelGroupName.textContent = 'Nombre de la Nueva Área';
+            labelLeaderName.textContent = 'Nombre del Líder de Área';
+            btnText.textContent = 'Registrar Área y Líder';
+        } else {
+            addressGroup.style.display = 'none';
+            linkGroup.style.display = 'none';
+            addressInput.required = false;
+            linkSelect.required = false;
+            labelGroupName.textContent = 'Nombre del Grupo General';
+            labelLeaderName.textContent = 'Nombre del Líder General';
+            btnText.textContent = 'Registrar Grupo y Líder';
+        }
+    });
+
+    // Unified: Group / Leader Registration Form Submission
+    elements.unifiedRegForm?.addEventListener('submit', handleUnifiedRegisterSubmit);
     
     // Listen for storage events (updates in mock DB across tabs or components)
     window.addEventListener('storage', () => {
@@ -580,16 +606,17 @@ async function handleGroupCreateArea(e) {
     }
 }
 
-// Handle new General/Group Leader creation by the Super Admin
-async function handleAdminCreateGroup(e) {
+// Handle unified registration submission
+async function handleUnifiedRegisterSubmit(e) {
     e.preventDefault();
     
-    const groupName = document.getElementById('admin-group-name').value;
-    const leaderName = document.getElementById('admin-leader-name').value;
-    const email = document.getElementById('admin-email').value;
-    const phone = document.getElementById('admin-phone').value;
-    const district = document.getElementById('admin-district').value;
-    const password = document.getElementById('admin-password').value;
+    const role = document.getElementById('unified-role').value;
+    const groupName = document.getElementById('unified-group-name').value;
+    const leaderName = document.getElementById('unified-leader-name').value;
+    const email = document.getElementById('unified-email').value;
+    const phone = document.getElementById('unified-phone').value;
+    const district = document.getElementById('unified-district').value;
+    const password = document.getElementById('unified-password').value;
 
     if (password.length < 6) {
         showToast('La contraseña debe tener al menos 6 caracteres', 'error');
@@ -599,11 +626,11 @@ async function handleAdminCreateGroup(e) {
     try {
         const allUsers = await db.getCollection('users');
         if (allUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-            showToast('El correo ya está registrado', 'error');
+            showToast('El correo electrónico ya está registrado', 'error');
             return;
         }
 
-        const newGroupLeader = {
+        const newUser = {
             uid: `usr-${Date.now()}`,
             email: email,
             password: password,
@@ -611,65 +638,26 @@ async function handleAdminCreateGroup(e) {
             liderName: leaderName,
             telefono: phone,
             distrito: district,
-            direccionReunion: 'Sede Principal',
-            rol: 'grupo' // Group Leader / General Leader
+            rol: role
         };
 
-        await db.addDoc('users', newGroupLeader);
-        showToast('¡Grupo General creado con éxito!', 'success');
-        elements.adminCreateGroupForm.reset();
-        loadGeneralDashboard();
-    } catch (err) {
-        showToast('Error al crear grupo general: ' + err.message, 'error');
-    }
-}
-
-// Handle new Area Leader creation by the General Leader / Super Admin
-async function handleGeneralCreateArea(e) {
-    e.preventDefault();
-    
-    const areaName = document.getElementById('general-area-name').value;
-    const leaderName = document.getElementById('general-area-leader').value;
-    const address = document.getElementById('general-area-address').value;
-    const email = document.getElementById('general-area-email').value;
-    const phone = document.getElementById('general-area-phone').value;
-    const district = document.getElementById('general-area-district').value;
-    const password = document.getElementById('general-area-password').value;
-    const groupLinkId = document.getElementById('general-area-group-link').value;
-
-    if (password.length < 6) {
-        showToast('La contraseña debe tener al menos 6 caracteres', 'error');
-        return;
-    }
-
-    try {
-        const allUsers = await db.getCollection('users');
-        if (allUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-            showToast('El correo del líder de área ya está registrado', 'error');
-            return;
+        if (role === 'area') {
+            const address = document.getElementById('unified-address').value;
+            const groupLinkId = document.getElementById('unified-group-link').value;
+            newUser.direccionReunion = address;
+            newUser.grupoId = groupLinkId;
+        } else {
+            newUser.direccionReunion = 'Sede Principal';
         }
 
-        const newAreaLeader = {
-            uid: `usr-${Date.now()}`,
-            email: email,
-            password: password,
-            nombreGrupo: areaName,
-            liderName: leaderName,
-            direccionReunion: address,
-            telefono: phone,
-            distrito: district,
-            rol: 'area',
-            grupoId: groupLinkId // Linked to selected Group Leader
-        };
-
-        await db.addDoc('users', newAreaLeader);
-        showToast('¡Área y Líder de Área creados con éxito!', 'success');
-        elements.generalCreateAreaForm.reset();
+        await db.addDoc('users', newUser);
+        showToast(role === 'area' ? '¡Área y Líder de Área creados con éxito!' : '¡Grupo General creado con éxito!', 'success');
+        elements.unifiedRegForm.reset();
         
         loadGeneralDashboard();
         populateRegMemberAreaSelect();
     } catch (err) {
-        showToast('Error al crear área: ' + err.message, 'error');
+        showToast('Error al registrar: ' + err.message, 'error');
     }
 }
 
@@ -720,23 +708,52 @@ async function loadGeneralDashboard() {
         const themes = await db.getCollection('themes');
         const docs = await db.getCollection('documents');
         
-        // Setup Super Admin Group creation form visibility
-        if (currentUser.rol === 'admin' && elements.adminCreateGroupCard) {
-            elements.adminCreateGroupCard.style.display = 'block';
-        } else if (elements.adminCreateGroupCard) {
-            elements.adminCreateGroupCard.style.display = 'none';
-        }
-        
-        // Populate supervisor general group links select
-        if (elements.generalAreaGroupLinkSelect) {
-            elements.generalAreaGroupLinkSelect.innerHTML = '<option value="" disabled selected>Selecciona el grupo supervisor</option>';
+        // Setup Unified registration form behavior and fields
+        const roleGroup = document.getElementById('unified-role-group');
+        const roleSelect = document.getElementById('unified-role');
+        const addressGroup = document.getElementById('unified-address-group');
+        const linkGroup = document.getElementById('unified-group-link-group');
+        const labelGroupName = document.getElementById('label-group-name');
+        const labelLeaderName = document.getElementById('label-leader-name');
+        const btnText = document.getElementById('unified-btn-text');
+
+        if (elements.unifiedGroupLinkSelect) {
+            elements.unifiedGroupLinkSelect.innerHTML = '<option value="" disabled selected>Selecciona el grupo supervisor</option>';
             const groupLeaders = users.filter(u => u.rol === 'grupo');
             groupLeaders.forEach(grp => {
                 const opt = document.createElement('option');
                 opt.value = grp.uid;
                 opt.textContent = `${grp.nombreGrupo} (${grp.liderName})`;
-                elements.generalAreaGroupLinkSelect.appendChild(opt);
+                elements.unifiedGroupLinkSelect.appendChild(opt);
             });
+        }
+
+        if (roleGroup && roleSelect) {
+            if (currentUser.rol === 'admin') {
+                roleGroup.style.display = 'block';
+                const isArea = roleSelect.value === 'area';
+                if (addressGroup) addressGroup.style.display = isArea ? 'block' : 'none';
+                if (linkGroup) linkGroup.style.display = isArea ? 'block' : 'none';
+                const addrInput = document.getElementById('unified-address');
+                if (addrInput) addrInput.required = isArea;
+                const linkInput = document.getElementById('unified-group-link');
+                if (linkInput) linkInput.required = isArea;
+                if (labelGroupName) labelGroupName.textContent = isArea ? 'Nombre de la Nueva Área' : 'Nombre del Grupo General';
+                if (labelLeaderName) labelLeaderName.textContent = isArea ? 'Nombre del Líder de Área' : 'Nombre del Líder General';
+                if (btnText) btnText.textContent = isArea ? 'Registrar Área y Líder' : 'Registrar Grupo y Líder';
+            } else {
+                roleGroup.style.display = 'none';
+                roleSelect.value = 'area';
+                if (addressGroup) addressGroup.style.display = 'block';
+                if (linkGroup) linkGroup.style.display = 'block';
+                const addrInput = document.getElementById('unified-address');
+                if (addrInput) addrInput.required = true;
+                const linkInput = document.getElementById('unified-group-link');
+                if (linkInput) linkInput.required = true;
+                if (labelGroupName) labelGroupName.textContent = 'Nombre de la Nueva Área';
+                if (labelLeaderName) labelLeaderName.textContent = 'Nombre del Líder de Área';
+                if (btnText) btnText.textContent = 'Registrar Área y Líder';
+            }
         }
         // 2. Render Meetings Table
         elements.generalMeetingsTable.innerHTML = '';

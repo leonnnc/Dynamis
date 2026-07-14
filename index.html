@@ -390,82 +390,55 @@
                         </div>
                     </div>
 
-                    <!-- Card: Super Admin creates General Groups / Leaders -->
-                    <div class="card" id="admin-create-group-card" style="margin-top: 24px; display: none;">
+                    <!-- Card: Unified Group / Leader Registration -->
+                    <div class="card" id="unified-registration-card" style="margin-top: 24px;">
                         <div class="card-header">
-                            <h3>Crear Grupo General (Líder)</h3>
+                            <h3 id="unified-reg-title">Crear Nuevo Grupo / Líder</h3>
                         </div>
-                        <form id="admin-create-group-form" class="card-body">
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-group-name" style="font-size:0.8rem;">Nombre del Grupo General</label>
-                                <input type="text" id="admin-group-name" required placeholder="Ej. Dynamis San Borja" style="padding: 8px;">
+                        <form id="unified-registration-form" class="card-body">
+                            <div class="form-group" id="unified-role-group" style="margin-bottom: 12px;">
+                                <label for="unified-role" style="font-size:0.8rem;">Tipo de Registro</label>
+                                <select id="unified-role" required style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
+                                    <option value="area" selected>Líder de Área</option>
+                                    <option value="grupo">Líder General (Grupo)</option>
+                                </select>
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-leader-name" style="font-size:0.8rem;">Nombre del Líder General</label>
-                                <input type="text" id="admin-leader-name" required placeholder="Ej. Juan Pérez" style="padding: 8px;">
+                                <label for="unified-group-name" id="label-group-name" style="font-size:0.8rem;">Nombre de la Nueva Área</label>
+                                <input type="text" id="unified-group-name" required placeholder="Ej. Dynamis Surco C" style="padding: 8px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-email" style="font-size:0.8rem;">Correo Electrónico</label>
-                                <input type="email" id="admin-email" required placeholder="lider@dynamis.com" style="padding: 8px;">
+                                <label for="unified-leader-name" id="label-leader-name" style="font-size:0.8rem;">Nombre del Líder</label>
+                                <input type="text" id="unified-leader-name" required placeholder="Ej. Sofía Ruiz" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" id="unified-address-group" style="margin-bottom: 12px;">
+                                <label for="unified-address" style="font-size:0.8rem;">Dirección de Reunión</label>
+                                <input type="text" id="unified-address" placeholder="Ej. Av. Caminos del Inca 320" style="padding: 8px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
-                                <input type="tel" id="admin-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
+                                <label for="unified-email" style="font-size:0.8rem;">Correo Electrónico</label>
+                                <input type="email" id="unified-email" required placeholder="correo@dynamis.com" style="padding: 8px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-district" style="font-size:0.8rem;">Distrito</label>
-                                <input type="text" id="admin-district" required placeholder="Ej. San Borja" style="padding: 8px;">
+                                <label for="unified-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
+                                <input type="tel" id="unified-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="admin-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
-                                <input type="password" id="admin-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
-                            </div>
-                            <button type="submit" class="btn btn-accent btn-sm btn-block">Registrar Grupo y Líder</button>
-                        </form>
-                    </div>
-
-                    <!-- Card: General Leader creates Areas -->
-                    <div class="card" id="general-create-area-card" style="margin-top: 24px;">
-                        <div class="card-header">
-                            <h3>Crear Nueva Área / Líder de Área</h3>
-                        </div>
-                        <form id="general-create-area-form" class="card-body">
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-name" style="font-size:0.8rem;">Nombre de la Nueva Área</label>
-                                <input type="text" id="general-area-name" required placeholder="Ej. Dynamis Surco C" style="padding: 8px;">
+                                <label for="unified-district" style="font-size:0.8rem;">Distrito</label>
+                                <input type="text" id="unified-district" required placeholder="Ej. Santiago de Surco" style="padding: 8px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-leader" style="font-size:0.8rem;">Nombre del Líder de Área</label>
-                                <input type="text" id="general-area-leader" required placeholder="Ej. Sofía Ruiz" style="padding: 8px;">
+                                <label for="unified-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
+                                <input type="password" id="unified-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
                             </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-address" style="font-size:0.8rem;">Dirección de Reunión</label>
-                                <input type="text" id="general-area-address" required placeholder="Ej. Av. Caminos del Inca 320" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-email" style="font-size:0.8rem;">Correo Electrónico</label>
-                                <input type="email" id="general-area-email" required placeholder="area.c@dynamis.com" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
-                                <input type="tel" id="general-area-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-district" style="font-size:0.8rem;">Distrito</label>
-                                <input type="text" id="general-area-district" required placeholder="Ej. Santiago de Surco" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
-                                <input type="password" id="general-area-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="general-area-group-link" style="font-size:0.8rem;">Vincular a Grupo General</label>
-                                <select id="general-area-group-link" required style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
+                            <div class="form-group" id="unified-group-link-group" style="margin-bottom: 12px;">
+                                <label for="unified-group-link" style="font-size:0.8rem;">Vincular a Grupo General</label>
+                                <select id="unified-group-link" style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
                                     <option value="" disabled selected>Selecciona el grupo supervisor</option>
                                     <!-- Loaded dynamically -->
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-accent btn-sm btn-block">Registrar Área y Líder</button>
+                            <button type="submit" class="btn btn-accent btn-sm btn-block" id="unified-btn-text">Registrar Área y Líder</button>
                         </form>
                     </div>
                 </div>
