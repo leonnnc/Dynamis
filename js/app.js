@@ -51,6 +51,8 @@ const elements = {
     groupMetricAreas: document.getElementById('group-metric-areas'),
     groupAreasTable: document.getElementById('group-areas-table')?.querySelector('tbody'),
     groupMeetingsCompact: document.getElementById('group-meetings-compact'),
+    groupCreateAreaForm: document.getElementById('group-create-area-form'),
+    homeParticipantRegisterForm: document.getElementById('home-participant-register-form'),
     
     // Area Dashboard
     areaTitle: document.getElementById('area-title'),
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     checkSession();
     updateFooterStats();
+    populateHomeParticipantAreaSelect();
     setupEventListeners();
 });
 
@@ -398,43 +401,11 @@ function setupEventListeners() {
     // Area: Create Meeting Form
     elements.areaMeetingForm?.addEventListener('submit', handleCreateMeeting);
     
-    // Tabs Toggle for Register Section
-    const tabLeader = document.getElementById('tab-register-leader');
-    const tabMember = document.getElementById('tab-register-member');
-    
-    tabLeader?.addEventListener('click', () => {
-        tabLeader.classList.add('btn-primary', 'active');
-        tabLeader.classList.remove('btn-outline');
-        
-        tabMember?.classList.remove('btn-primary', 'active');
-        tabMember?.classList.add('btn-outline');
-        
-        elements.registerForm?.classList.remove('hidden');
-        elements.registerMemberForm?.classList.add('hidden');
-        
-        document.getElementById('register-section-title').textContent = 'Registrar Nuevo Grupo / Líder';
-        document.getElementById('register-section-desc').textContent = 'Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.';
-    });
-    
-    tabMember?.addEventListener('click', () => {
-        tabMember.classList.add('btn-primary', 'active');
-        tabMember.classList.remove('btn-outline');
-        
-        tabLeader?.classList.remove('btn-primary', 'active');
-        tabLeader?.classList.add('btn-outline');
-        
-        elements.registerForm?.classList.add('hidden');
-        elements.registerMemberForm?.classList.remove('hidden');
-        
-        document.getElementById('register-section-title').textContent = 'Unirse a un Grupo de Reuniones';
-        document.getElementById('register-section-desc').textContent = 'Ingresa tus datos personales y selecciona el área/grupo de Dynamis al que deseas unirte.';
-        
-        // Dynamically load active Area Groups
-        populateRegMemberAreaSelect();
-    });
+    // Group: Create Area Form
+    elements.groupCreateAreaForm?.addEventListener('submit', handleGroupCreateArea);
 
-    // Register Member Form
-    elements.registerMemberForm?.addEventListener('submit', handleRegisterMember);
+    // Home: Participant Register Form
+    elements.homeParticipantRegisterForm?.addEventListener('submit', handleHomeParticipantRegister);
     
     // Listen for storage events (updates in mock DB across tabs or components)
     window.addEventListener('storage', () => {
@@ -443,6 +414,7 @@ function setupEventListeners() {
         if (hash === '#dashboard-grupo') loadGroupDashboard();
         if (hash === '#dashboard-area') loadAreaDashboard();
         updateFooterStats();
+        populateHomeParticipantAreaSelect();
     });
 }
 
@@ -497,12 +469,12 @@ async function handleRegister(e) {
     }
 }
 
-// Populate Area select dropdown with active Area Leaders from users collection
-async function populateRegMemberAreaSelect() {
-    const select = document.getElementById('reg-mem-area');
+// Populate Area select dropdown with active Area Leaders from users collection (Home Page)
+async function populateHomeParticipantAreaSelect() {
+    const select = document.getElementById('home-mem-area');
     if (!select) return;
     
-    select.innerHTML = '<option value="" disabled selected>Selecciona tu área/grupo</option>';
+    select.innerHTML = '<option value="" disabled selected>Selecciona tu área/grupo de reuniones</option>';
     try {
         const allUsers = await db.getCollection('users');
         const areaLeaders = allUsers.filter(u => u.rol === 'area');
@@ -518,22 +490,22 @@ async function populateRegMemberAreaSelect() {
             });
         }
     } catch (e) {
-        console.error("Error loading areas for member registration:", e);
+        console.error("Error loading areas for participant registration:", e);
         select.innerHTML = '<option value="" disabled>Error al cargar áreas</option>';
     }
 }
 
-// Handle member registration submission
-async function handleRegisterMember(e) {
+// Handle participant registration directly from the home page
+async function handleHomeParticipantRegister(e) {
     e.preventDefault();
     
-    const name = document.getElementById('reg-mem-name').value;
-    const email = document.getElementById('reg-mem-email').value;
-    const phone = document.getElementById('reg-mem-phone').value;
-    const areaLiderId = document.getElementById('reg-mem-area').value;
+    const name = document.getElementById('home-mem-name').value;
+    const email = document.getElementById('home-mem-email').value;
+    const phone = document.getElementById('home-mem-phone').value;
+    const areaLiderId = document.getElementById('home-mem-area').value;
 
     try {
-        const newMember = {
+        const newParticipant = {
             areaLiderId: areaLiderId,
             nombreCompleto: name,
             correo: email || '',
@@ -541,12 +513,68 @@ async function handleRegisterMember(e) {
             estado: 'activo'
         };
 
-        await db.addDoc('members', newMember);
+        await db.addDoc('members', newParticipant);
         showToast('¡Registro exitoso! Te has unido al grupo correctamente', 'success');
-        document.getElementById('register-member-form').reset();
-        window.location.hash = '#home';
+        elements.homeParticipantRegisterForm.reset();
+        
+        // Update general dashboard or footer connection stats in real-time
+        updateFooterStats();
     } catch (err) {
-        showToast('Error al unirse al grupo: ' + err.message, 'error');
+        showToast('Error al registrarse en el grupo: ' + err.message, 'error');
+    }
+}
+
+// Handle new Area Leader creation by a Group Leader
+async function handleGroupCreateArea(e) {
+    e.preventDefault();
+    
+    const areaName = document.getElementById('group-area-name').value;
+    const leaderName = document.getElementById('group-area-leader').value;
+    const address = document.getElementById('group-area-address').value;
+    const email = document.getElementById('group-area-email').value;
+    const phone = document.getElementById('group-area-phone').value;
+    const district = document.getElementById('group-area-district').value;
+    const password = document.getElementById('group-area-password').value;
+
+    if (password.length < 6) {
+        showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+
+    try {
+        // Check if email already exists
+        const allUsers = await db.getCollection('users');
+        const userExists = allUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        if (userExists) {
+            showToast('El correo electrónico ya está registrado', 'error');
+            return;
+        }
+
+        // Create new Area Leader account linked to this Group Leader
+        const newAreaLeader = {
+            uid: `usr-${Date.now()}`,
+            email: email,
+            password: password,
+            nombreGrupo: areaName,
+            liderName: leaderName,
+            direccionReunion: address,
+            telefono: phone,
+            distrito: district,
+            rol: 'area',
+            grupoId: currentUser.uid // Assigned to this Group Leader
+        };
+
+        await db.addDoc('users', newAreaLeader);
+        showToast('¡Área y Líder creados exitosamente!', 'success');
+        elements.groupCreateAreaForm.reset();
+        
+        // Reload dashboard areas list
+        loadGroupDashboard();
+        // Reload dropdown on Home page
+        populateHomeParticipantAreaSelect();
+    } catch (err) {
+        showToast('Error al crear el área de reunión: ' + err.message, 'error');
     }
 }
 
@@ -663,7 +691,7 @@ async function loadGeneralDashboard() {
         // 4. Render Members Table
         elements.generalMembersTable.innerHTML = '';
         if (members.length === 0) {
-            elements.generalMembersTable.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay miembros registrados aún.</td></tr>`;
+            elements.generalMembersTable.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay participantes registrados aún.</td></tr>`;
         } else {
             members.forEach(mem => {
                 const leader = users.find(u => u.uid === mem.areaLiderId);
@@ -854,7 +882,7 @@ async function loadGroupDashboard() {
                         <span>Lugar: ${meet.direccion} (${meet.distrito})</span><br>
                         <span>Fecha: ${meet.fecha} a las ${meet.hora}</span>
                     </div>
-                    <span class="meeting-compact-count">${meet.miembrosReunidosCount} Reunidos</span>
+                    <span class="meeting-compact-count">${meet.miembrosReunidosCount} Participantes</span>
                 `;
                 elements.groupMeetingsCompact.appendChild(div);
             });
@@ -914,7 +942,7 @@ async function loadAreaDashboard() {
         // 2. Render Members list
         elements.areaMembersList.innerHTML = '';
         if (myMembers.length === 0) {
-            elements.areaMembersList.innerHTML = `<li style="padding:20px;text-align:center;color:var(--color-text-muted);font-size:0.9rem">No tienes integrantes registrados en tu área.</li>`;
+            elements.areaMembersList.innerHTML = `<li style="padding:20px;text-align:center;color:var(--color-text-muted);font-size:0.9rem">No tienes participantes registrados en tu área.</li>`;
         } else {
             myMembers.forEach(mem => {
                 const li = document.createElement('li');
@@ -924,7 +952,7 @@ async function loadAreaDashboard() {
                         <span class="member-name">${mem.nombreCompleto}</span>
                         <span class="member-phone-email">${mem.telefono} • ${mem.correo || 'Sin correo'}</span>
                     </div>
-                    <button class="btn-delete-member" data-id="${mem.id}" aria-label="Eliminar miembro">
+                    <button class="btn-delete-member" data-id="${mem.id}" aria-label="Eliminar participante">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                     </button>
                 `;
@@ -934,7 +962,7 @@ async function loadAreaDashboard() {
                     const memberId = e.currentTarget.getAttribute('data-id');
                     if (confirm(`¿Eliminar a ${mem.nombreCompleto} del área?`)) {
                         await db.deleteDoc('members', memberId);
-                        showToast('Miembro eliminado', 'info');
+                        showToast('Participante eliminado', 'info');
                         loadAreaDashboard();
                     }
                 });
@@ -972,12 +1000,12 @@ async function loadAreaDashboard() {
                         <strong>${meet.tema}</strong>
                         <span>📍 ${meet.direccion}</span>
                         <span>📅 ${meet.fecha} a las ${meet.hora}</span>
-                        <span style="color:var(--color-cyan)">👥 Conteo: ${meet.miembrosReunidosCount} personas reunidas</span>
+                        <span style="color:var(--color-cyan)">👥 Conteo: ${meet.miembrosReunidosCount} participantes reunidos</span>
                     </div>
                     <div class="meeting-actions-row">
                         <a href="${waLink}" target="_blank" class="whatsapp-btn">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.249 8.477 3.522 2.26 2.27 3.502 5.287 3.5 8.497-.005 6.66-5.345 11.997-11.956 11.997-2.005-.001-3.973-.5-5.787-1.45L0 24zm6.275-3.565l.34.202c1.6.953 3.445 1.455 5.337 1.456 5.568 0 10.101-4.52 10.106-10.088.002-2.697-1.043-5.234-2.946-7.14C17.26 3.056 14.73 2.01 12.015 2.01 6.446 2.01 1.913 6.53 1.908 12.099c-.001 1.802.476 3.566 1.383 5.114l.223.38-1.01 3.69 3.79-.993zM16.518 13.9c-.3-.15-1.782-.88-2.062-.98-.28-.1-.48-.15-.68.15-.2.3-.77.98-.95 1.18-.18.2-.35.22-.65.07-1.13-.56-1.98-.98-2.75-2.31-.2-.35-.2-.75-.35-1.1.07-.12.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.07-.15-.68-1.64-.93-2.24-.25-.6-.52-.52-.68-.53-.15-.01-.33-.01-.51-.01-.18 0-.47.07-.72.33-.25.27-.95.93-.95 2.28 0 1.34.98 2.64 1.12 2.82.14.18 1.92 2.93 4.66 4.12.65.28 1.16.45 1.56.57.66.21 1.25.18 1.73.11.53-.08 1.782-.73 2.032-1.43.25-.7.25-1.3.18-1.43-.08-.13-.28-.21-.58-.36z"/></svg>
-                            Avisar integrantes
+                            Avisar participantes
                         </a>
                         <button class="reunir-btn" data-id="${meet.id}">Registrar Asistencia</button>
                     </div>
@@ -986,7 +1014,7 @@ async function loadAreaDashboard() {
                 // Register Attendance button listener
                 div.querySelector('.reunir-btn').addEventListener('click', async (e) => {
                     const meetId = e.target.getAttribute('data-id');
-                    const count = prompt('Ingresa el conteo final de miembros que asistieron a la reunión:', meet.miembrosReunidosCount);
+                    const count = prompt('Ingresa el conteo final de participantes que asistieron a la reunión:', meet.miembrosReunidosCount);
                     
                     if (count !== null) {
                         const num = parseInt(count);
@@ -1056,11 +1084,11 @@ async function handleAddMember(e) {
         };
 
         await db.addDoc('members', newMember);
-        showToast('Miembro agregado al área exitosamente', 'success');
+        showToast('Participante agregado al área exitosamente', 'success');
         elements.areaMemberForm.reset();
         loadAreaDashboard();
     } catch (err) {
-        showToast('Error al agregar miembro: ' + err.message, 'error');
+        showToast('Error al agregar participante: ' + err.message, 'error');
     }
 }
 

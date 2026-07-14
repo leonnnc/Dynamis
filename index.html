@@ -27,7 +27,7 @@
             <nav class="nav" id="nav-menu">
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link active" data-section="home">Inicio</a></li>
-                    <li><a href="#register" class="nav-link" data-section="register">Registrarse</a></li>
+                    <li><a href="#register" class="nav-link" data-section="register">Registrar Grupo</a></li>
                     <li><a href="#login" class="nav-link" data-section="login" id="nav-login-btn">Acceder</a></li>
                     <!-- Profile indicator shown when logged in -->
                     <li class="nav-profile-item hidden" id="nav-profile">
@@ -84,9 +84,9 @@
                                 <div class="slide-overlay-content">
                                     <span class="badge">Unión y Sinergia</span>
                                     <h1>Líderes de Área y Coordinación Directa</h1>
-                                    <p>Estadísticas consolidadas en tiempo real y alertas instantáneas por WhatsApp para notificar a los miembros de tu zona.</p>
-                                    <div class="hero-actions">
-                                        <a href="#login" class="btn btn-primary btn-lg" data-target="login">Ver Miembros</a>
+                                    <p>Estadísticas consolidadas en tiempo real y alertas instantáneas por WhatsApp para notificar a los participantes de tu zona.</p>
+                                    <div class="slide-actions">
+                                        <a href="#login" class="btn btn-primary btn-lg" data-target="login">Ver Participantes</a>
                                         <a href="#register" class="btn btn-outline btn-lg" data-target="register">Registrarse</a>
                                     </div>
                                 </div>
@@ -153,23 +153,49 @@
                     <p>El Líder General sube guías y documentos útiles que los líderes de área descargan al instante.</p>
                 </div>
             </div>
+
+            <!-- Participant Registration Form directly on Home Page -->
+            <div class="card" style="max-width: 700px; margin: 40px auto 20px; padding: 40px; background: var(--bg-card); border: 2px solid var(--color-cyan); box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);">
+                <div class="form-header" style="margin-bottom: 24px; text-align: center;">
+                    <span class="badge badge-accent" style="margin-bottom: 8px;">¡Únete hoy!</span>
+                    <h2 style="font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Registro de Participantes</h2>
+                    <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Ingresa tus datos para registrar tu asistencia y unirte a un grupo de reuniones de Dynamis.</p>
+                </div>
+                <form id="home-participant-register-form" class="auth-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="home-mem-name">Nombre y Apellido</label>
+                            <input type="text" id="home-mem-name" required placeholder="Ej. Andrea Rojas">
+                        </div>
+                        <div class="form-group">
+                            <label for="home-mem-email">Correo Electrónico (Opcional)</label>
+                            <input type="email" id="home-mem-email" placeholder="andrea.rojas@correo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="home-mem-phone">Teléfono / Celular</label>
+                            <input type="tel" id="home-mem-phone" required placeholder="Ej. 987654321">
+                        </div>
+                        <div class="form-group">
+                            <label for="home-mem-area">Grupo / Área a la que te unes</label>
+                            <select id="home-mem-area" required>
+                                <option value="" disabled selected>Cargando áreas disponibles...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-block btn-lg" style="margin-top: 15px;">Registrarme e Integrarme al Grupo</button>
+                </form>
+            </div>
         </section>
 
         <!-- 2. REGISTER SECTION -->
         <section id="register" class="app-section">
             <div class="form-container">
                 <div class="form-header">
-                    <h2 id="register-section-title">Registro en la Plataforma</h2>
-                    <p id="register-section-desc">Regístrate como nuevo Líder de Grupo/Área o únete como Miembro a un área existente.</p>
+                    <h2>Registrar Nuevo Grupo / Líder</h2>
+                    <p>Únete a Dynamis creando un grupo de reuniones e ingresando tus credenciales de liderazgo.</p>
                 </div>
 
-                <!-- Tabs selector -->
-                <div class="register-tabs" style="display:flex; justify-content:center; gap:16px; margin-bottom:30px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
-                    <button class="btn btn-primary tab-btn active" id="tab-register-leader" type="button" style="flex:1; max-width:200px;">Nuevo Líder</button>
-                    <button class="btn btn-outline tab-btn" id="tab-register-member" type="button" style="flex:1; max-width:200px;">Nuevo Miembro</button>
-                </div>
-
-                <!-- FORM 1: LEADER REGISTRATION (Existing form) -->
+                <!-- FORM: LEADER REGISTRATION -->
                 <form id="register-form" class="auth-form">
                     <div class="form-grid">
                         <div class="form-group">
@@ -256,32 +282,6 @@
                     <button type="submit" class="btn btn-primary btn-block">Crear Cuenta y Registrar</button>
                     <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
                 </form>
-
-                <!-- FORM 2: MEMBER REGISTRATION (New form) -->
-                <form id="register-member-form" class="auth-form hidden">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reg-mem-name">Nombre y Apellido del Miembro</label>
-                            <input type="text" id="reg-mem-name" required placeholder="Ej. Juan Gómez">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-mem-email">Correo Electrónico (Opcional)</label>
-                            <input type="email" id="reg-mem-email" placeholder="juan.gomez@correo.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-mem-phone">Teléfono / Celular</label>
-                            <input type="tel" id="reg-mem-phone" required placeholder="Ej. 987654321">
-                        </div>
-                        <div class="form-group">
-                            <label for="reg-mem-area">Grupo / Área al que se une</label>
-                            <select id="reg-mem-area" required>
-                                <option value="" disabled selected>Cargando áreas disponibles...</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-accent btn-block">Registrarse en el Grupo</button>
-                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#login" data-target="login">Inicia Sesión aquí</a></p>
-                </form>
             </div>
         </section>
 
@@ -335,7 +335,7 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-val" id="gmetric-members">0</div>
-                    <div class="metric-label">Miembros Totales Reunidos</div>
+                    <div class="metric-label">Participantes Totales Reunidos</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-val" id="gmetric-meetings">0</div>
@@ -369,7 +369,7 @@
                                         <th>Distrito</th>
                                         <th>Lugar de Reunión</th>
                                         <th>Tema Tratado</th>
-                                        <th>Miembros</th>
+                                        <th>Participantes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -382,13 +382,13 @@
                     <!-- Section: All Members -->
                     <div class="card" style="margin-top: 30px;">
                         <div class="card-header">
-                            <h3>Miembros Registrados en la Organización</h3>
+                            <h3>Participantes Registrados en la Organización</h3>
                         </div>
                         <div class="table-responsive">
                             <table class="table" id="general-members-table">
                                 <thead>
                                     <tr>
-                                        <th>Miembro</th>
+                                        <th>Participante</th>
                                         <th>Contacto</th>
                                         <th>Grupo / Distrito</th>
                                         <th>Líder de Área</th>
@@ -482,7 +482,7 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-val" id="group-metric-total-members">0</div>
-                    <div class="metric-label">Miembros Totales del Grupo</div>
+                    <div class="metric-label">Participantes Totales del Grupo</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-val" id="group-metric-meetings">0</div>
@@ -510,7 +510,7 @@
                                         <th>Correo</th>
                                         <th>Teléfono</th>
                                         <th>Distrito / Reunión</th>
-                                        <th>Total Miembros</th>
+                                        <th>Total Participantes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -523,6 +523,44 @@
 
                 <!-- Right: Meeting Logs of areas -->
                 <div class="dash-side">
+                    <!-- Card: Create Area / Area Leader -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <h3>Crear Nueva Área / Líder</h3>
+                        </div>
+                        <form id="group-create-area-form" class="card-body">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-name" style="font-size:0.8rem;">Nombre de la Nueva Área</label>
+                                <input type="text" id="group-area-name" required placeholder="Ej. Dynamis Surco B" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-leader" style="font-size:0.8rem;">Nombre del Líder de Área</label>
+                                <input type="text" id="group-area-leader" required placeholder="Ej. Carlos Mendoza" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-address" style="font-size:0.8rem;">Dirección de Reunión</label>
+                                <input type="text" id="group-area-address" required placeholder="Ej. Calle Los Pinos 123" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-email" style="font-size:0.8rem;">Correo Electrónico</label>
+                                <input type="email" id="group-area-email" required placeholder="correo@ejemplo.com" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
+                                <input type="tel" id="group-area-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-district" style="font-size:0.8rem;">Distrito</label>
+                                <input type="text" id="group-area-district" required placeholder="Ej. Santiago de Surco" style="padding: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="group-area-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
+                                <input type="password" id="group-area-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
+                            </div>
+                            <button type="submit" class="btn btn-accent btn-sm btn-block">Registrar Área y Líder</button>
+                        </form>
+                    </div>
+
                     <div class="card">
                         <div class="card-header">
                             <h3>Reuniones Recientes de las Áreas</h3>
@@ -541,7 +579,7 @@
                 <div>
                     <span class="badge badge-accent">Panel Operativo</span>
                     <h2 id="area-title">Dashboard: Líder de Área</h2>
-                    <p id="area-welcome">Gestión de miembros y programación de reuniones</p>
+                    <p id="area-welcome">Gestión de participantes y programación de reuniones</p>
                 </div>
                 <div>
                     <span class="last-sync-tag">Conectado a Firebase Database</span>
@@ -552,7 +590,7 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-val" id="area-metric-members">0</div>
-                    <div class="metric-label">Miembros en el Área</div>
+                    <div class="metric-label">Participantes en el Área</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-val" id="area-metric-meetings">0</div>
@@ -569,7 +607,7 @@
                 <!-- Column 1: Members Management -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Miembros del Área</h3>
+                        <h3>Participantes del Área</h3>
                     </div>
                     <!-- Add member form -->
                     <form id="area-member-form" class="card-body member-add-form">
@@ -615,7 +653,7 @@
                             <input type="text" id="meet-location" required placeholder="Dirección física">
                         </div>
                         <div class="form-group">
-                            <label for="meet-expected-count">Cantidad de Miembros Asistentes</label>
+                            <label for="meet-expected-count">Cantidad de Participantes Asistentes</label>
                             <input type="number" id="meet-expected-count" required min="1" placeholder="Ej. 12">
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm btn-block">Programar Reunión</button>
