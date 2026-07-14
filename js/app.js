@@ -36,6 +36,7 @@ const elements = {
     gmetricThemes: document.getElementById('gmetric-themes'),
     generalMeetingsTable: document.getElementById('general-meetings-table')?.querySelector('tbody'),
     generalMembersTable: document.getElementById('general-members-table')?.querySelector('tbody'),
+    generalActiveUsers: document.getElementById('general-active-users'),
     generalUploadedDocs: document.getElementById('general-uploaded-docs'),
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
@@ -180,10 +181,40 @@ function checkSession() {
     if (session) {
         currentUser = JSON.parse(session);
         updateNavState(true);
+        // Set user online upon reload if session exists
+        setConnectionStatus(currentUser.uid, true);
     } else {
         updateNavState(false);
     }
 }
+
+// Helper to update connection status
+async function setConnectionStatus(userId, isConnected) {
+    try {
+        const timestamp = new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+        await db.updateDoc('users', userId, { 
+            conectado: isConnected, 
+            ultimaConexion: isConnected ? timestamp : (currentUser?.ultimaConexion || '--')
+        });
+    } catch (e) {
+        console.error("Error updating connection status:", e);
+    }
+}
+
+// Browser close presence handler
+window.addEventListener('beforeunload', () => {
+    if (currentUser) {
+        // Direct synchronous update to local storage cache to guarantee persistence on exit
+        const data = JSON.parse(localStorage.getItem('dynamis_local_db'));
+        if (data && data.users) {
+            const uIdx = data.users.findIndex(u => u.uid === currentUser.uid);
+            if (uIdx !== -1) {
+                data.users[uIdx].conectado = false;
+                localStorage.setItem('dynamis_local_db', JSON.stringify(data));
+            }
+        }
+    }
+});
 
 function updateNavState(isLoggedIn) {
     if (isLoggedIn && currentUser) {
@@ -301,7 +332,10 @@ function setupEventListeners() {
     });
 
     // Logout
-    elements.logoutBtn?.addEventListener('click', () => {
+    elements.logoutBtn?.addEventListener('click', async () => {
+        if (currentUser) {
+            await setConnectionStatus(currentUser.uid, false);
+        }
         sessionStorage.removeItem('dynamis_session');
         currentUser = null;
         updateNavState(false);
@@ -420,6 +454,7 @@ async function handleLogin(e) {
         
         // Update layout
         updateNavState(true);
+        await setConnectionStatus(user.uid, true);
         showToast(`Sesión iniciada como ${user.liderName}`, 'success');
         
         // Redirect to dashboard
@@ -531,6 +566,50 @@ async function loadGeneralDashboard() {
             });
         }
 
+        // 5. Render Active Leaders Presence (Invisible Super Admin)
+        elements.generalActiveUsers.innerHTML = '';
+        const leaders = users.filter(u => u.email !== 'admin@dynamis.com');
+        
+        leaders.forEach(u => {
+            const li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+            li.style.justifyContent = 'space-between';
+            li.style.padding = '8px 12px';
+            li.style.background = 'hsla(240, 10%, 15%, 0.6)';
+            li.style.border = '1px solid var(--border-color)';
+            li.style.borderRadius = 'var(--border-radius-sm)';
+            li.style.gap = '10px';
+            
+            const isOnline = u.conectado === true;
+            const statusDot = isOnline 
+                ? `<span style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 6px var(--color-success); display: inline-block;"></span>`
+                : `<span style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-muted); display: inline-block;"></span>`;
+            
+            const statusText = isOnline 
+                ? `<span style="color: var(--color-success); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">En línea</span>`
+                : `<span style="color: var(--color-text-muted); font-size: 0.75rem;">Desconectado</span>`;
+
+            const connectionInfo = isOnline 
+                ? `<span style="font-size: 0.75rem; color: var(--color-text-muted)">Activo: ${u.ultimaConexion || 'Reciente'}</span>`
+                : `<span style="font-size: 0.75rem; color: var(--color-text-muted)">Últ: ${u.ultimaConexion || '--'}</span>`;
+
+            li.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:2px; flex-grow:1;">
+                    <strong style="font-size:0.88rem; color:#fff;">${u.liderName}</strong>
+                    <span style="font-size:0.75rem; color:var(--color-text-secondary);">${getRoleName(u.rol)} • ${u.nombreGrupo}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        ${statusDot}
+                        ${statusText}
+                    </div>
+                    ${connectionInfo}
+                </div>
+            `;
+            elements.generalActiveUsers.appendChild(li);
+        });
+
     } catch (err) {
         showToast('Error al cargar datos del dashboard: ' + err.message, 'error');
     }
@@ -625,13 +704,18 @@ async function loadGroupDashboard() {
             areaLeaders.forEach(leader => {
                 const leaderMembers = allMembers.filter(m => m.areaLiderId === leader.uid);
                 
+                const isOnline = leader.conectado === true;
+                const statusIndicator = isOnline
+                    ? `<span style="display:inline-flex; align-items:center; gap:6px; color:var(--color-success); font-weight:600; font-size:0.8rem;"><span style="width:6px; height:6px; background:var(--color-success); border-radius:50%; box-shadow:0 0 6px var(--color-success);"></span> En línea</span>`
+                    : `<span style="display:inline-flex; align-items:center; gap:6px; color:var(--color-text-muted); font-size:0.8rem;"><span style="width:6px; height:6px; background:var(--color-text-muted); border-radius:50%;"></span> Desconectado</span>`;
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${leader.liderName}</strong><br><span style="font-size:0.8rem;color:var(--color-text-muted)">${leader.nombreGrupo}</span></td>
                     <td>${leader.email}</td>
                     <td>${leader.telefono}</td>
                     <td><span class="profile-badge">${leader.distrito}</span><br><span style="font-size:0.8rem;color:var(--color-text-secondary)">${leader.direccionReunion}</span></td>
-                    <td><strong style="color:var(--color-cyan);font-size:1.1rem">${leaderMembers.length}</strong> integrantes</td>
+                    <td>${statusIndicator}<br><span style="font-size:0.82rem;color:var(--color-text-secondary);"><strong style="color:var(--color-cyan);font-size:1rem">${leaderMembers.length}</strong> integrantes</span></td>
                 `;
                 elements.groupAreasTable.appendChild(tr);
             });
