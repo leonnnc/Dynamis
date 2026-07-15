@@ -280,52 +280,100 @@
 
             <!-- Two Column Layout: Main & Side -->
             <div class="dashboard-grid">
-                <!-- Left: List of Meetings & Area Status -->
+                <!-- Left: Directory Control Center -->
                 <div class="dash-main">
-                    <!-- Section: All Meetings -->
+                    <!-- Card: Unified Directories Control -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3>Historial Global de Reuniones</h3>
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; flex-direction: column; gap: 10px;">
+                            <h3 style="margin: 0; font-size: 1.1rem;">Centro de Control y Directorios</h3>
+                            <div class="tab-header-row" style="display: flex; gap: 8px; width: 100%; overflow-x: auto; padding-bottom: 4px;">
+                                <button class="btn btn-xs tab-btn active" data-tab="tab-meetings" style="padding: 6px 12px; font-size: 0.75rem; border-radius: 4px;">Historial de Reuniones</button>
+                                <button class="btn btn-xs tab-btn" data-tab="tab-leaders-general" style="padding: 6px 12px; font-size: 0.75rem; border-radius: 4px;">Líderes Generales</button>
+                                <button class="btn btn-xs tab-btn" data-tab="tab-leaders-area" style="padding: 6px 12px; font-size: 0.75rem; border-radius: 4px;">Líderes de Área</button>
+                                <button class="btn btn-xs tab-btn" data-tab="tab-participants" style="padding: 6px 12px; font-size: 0.75rem; border-radius: 4px;">Participantes</button>
+                            </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table" id="general-meetings-table">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha / Hora</th>
-                                        <th>Grupo</th>
-                                        <th>Distrito</th>
-                                        <th>Lugar de Reunión</th>
-                                        <th>Tema Tratado</th>
-                                        <th>Participantes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dynamic content loaded via app.js -->
-                                </tbody>
-                            </table>
+                        
+                        <!-- Tab Content 1: Meetings -->
+                        <div class="tab-pane active" id="tab-meetings" style="padding: 10px 0;">
+                            <div class="table-responsive">
+                                <table class="table" id="general-meetings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha / Hora</th>
+                                            <th>Grupo</th>
+                                            <th>Distrito</th>
+                                            <th>Lugar de Reunión</th>
+                                            <th>Tema Tratado</th>
+                                            <th>Asistencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content loaded via app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Section: All Members -->
-                    <div class="card" style="margin-top: 30px;">
-                        <div class="card-header">
-                            <h3>Participantes Registrados en la Organización</h3>
+                        <!-- Tab Content 2: Líderes Generales -->
+                        <div class="tab-pane" id="tab-leaders-general" style="display: none; padding: 10px 0;">
+                            <div class="table-responsive">
+                                <table class="table" id="general-leaders-group-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Grupo General</th>
+                                            <th>Líder General</th>
+                                            <th>Contacto / Teléfono</th>
+                                            <th>Distrito</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content loaded via app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table" id="general-members-table">
-                                <thead>
-                                    <tr>
-                                        <th>Participante</th>
-                                        <th>Contacto</th>
-                                        <th>Grupo / Distrito</th>
-                                        <th>Líder de Área</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dynamic content loaded via app.js -->
-                                </tbody>
-                            </table>
+
+                        <!-- Tab Content 3: Líderes de Área -->
+                        <div class="tab-pane" id="tab-leaders-area" style="display: none; padding: 10px 0;">
+                            <div class="table-responsive">
+                                <table class="table" id="general-leaders-area-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Área / Zona</th>
+                                            <th>Líder de Área</th>
+                                            <th>Grupo Supervisor</th>
+                                            <th>Contacto / Teléfono</th>
+                                            <th>Distrito</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content loaded via app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab Content 4: Participantes -->
+                        <div class="tab-pane" id="tab-participants" style="display: none; padding: 10px 0;">
+                            <div class="table-responsive">
+                                <table class="table" id="general-members-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Participante</th>
+                                            <th>Contacto / Teléfono</th>
+                                            <th>Área Asignada</th>
+                                            <th>Distrito</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content loaded via app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -476,6 +524,29 @@
                                         <th>Teléfono</th>
                                         <th>Distrito / Reunión</th>
                                         <th>Total Participantes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card: Group Participants Directory -->
+                    <div class="card" style="margin-top: 24px;">
+                        <div class="card-header">
+                            <h3>Participantes en sus Áreas</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="group-members-table">
+                                <thead>
+                                    <tr>
+                                        <th>Participante</th>
+                                        <th>Contacto / Teléfono</th>
+                                        <th>Área</th>
+                                        <th>Distrito</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>

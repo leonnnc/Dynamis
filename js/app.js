@@ -33,6 +33,9 @@ const elements = {
     // General Dashboard
     generalMeetingsTable: document.getElementById('general-meetings-table')?.querySelector('tbody'),
     generalMembersTable: document.getElementById('general-members-table')?.querySelector('tbody'),
+    generalLeadersGroupTable: document.getElementById('general-leaders-group-table')?.querySelector('tbody'),
+    generalLeadersAreaTable: document.getElementById('general-leaders-area-table')?.querySelector('tbody'),
+    groupMembersTable: document.getElementById('group-members-table')?.querySelector('tbody'),
     generalActiveUsers: document.getElementById('general-active-users'),
     generalUploadedDocs: document.getElementById('general-uploaded-docs'),
     generalWelcome: document.getElementById('general-welcome'),
@@ -432,6 +435,33 @@ function setupEventListeners() {
 
     // Unified: Group / Leader Registration Form Submission
     elements.unifiedRegForm?.addEventListener('submit', handleUnifiedRegisterSubmit);
+
+    // Directory Control Center Tab Switching Listener
+    document.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.tab-btn');
+        if (tabBtn) {
+            e.preventDefault();
+            const tabId = tabBtn.getAttribute('data-tab');
+            const card = tabBtn.closest('.card');
+            
+            // Deactivate all tab buttons in this card
+            card.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Activate clicked tab button
+            tabBtn.classList.add('active');
+            
+            // Hide all tab panes in this card
+            card.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.style.display = 'none';
+                pane.classList.remove('active');
+            });
+            // Show target tab pane
+            const targetPane = document.getElementById(tabId);
+            if (targetPane) {
+                targetPane.style.display = 'block';
+                targetPane.classList.add('active');
+            }
+        }
+    });
     
     // Listen for storage events (updates in mock DB across tabs or components)
     window.addEventListener('storage', () => {
@@ -777,6 +807,62 @@ async function loadGeneralDashboard() {
             });
         }
 
+        // 2b. Render Líderes Generales Table
+        if (elements.generalLeadersGroupTable) {
+            elements.generalLeadersGroupTable.innerHTML = '';
+            const generalLeaders = users.filter(u => u.rol === 'grupo');
+            if (generalLeaders.length === 0) {
+                elements.generalLeadersGroupTable.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay líderes generales registrados aún.</td></tr>`;
+            } else {
+                generalLeaders.forEach(leader => {
+                    const isOnline = leader.conectado === true;
+                    const statusBadge = isOnline 
+                        ? `<span class="profile-badge" style="background:hsla(145, 80%, 40%, 0.15);color:var(--color-success);border-color:hsla(145, 80%, 40%, 0.3)">ACTIVO (ONLINE)</span>`
+                        : `<span class="profile-badge" style="background:rgba(255,255,255,0.05);color:var(--color-text-muted);border-color:rgba(255,255,255,0.1)">INACTIVO</span>`;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${leader.nombreGrupo}</strong></td>
+                        <td>${leader.liderName}</td>
+                        <td>${leader.telefono}<br><span style="font-size:0.8rem;color:var(--color-text-muted)">${leader.email}</span></td>
+                        <td><span class="profile-badge">${leader.distrito}</span></td>
+                        <td>${statusBadge}</td>
+                    `;
+                    elements.generalLeadersGroupTable.appendChild(tr);
+                });
+            }
+        }
+
+        // 2c. Render Líderes de Área Table
+        if (elements.generalLeadersAreaTable) {
+            elements.generalLeadersAreaTable.innerHTML = '';
+            const areaLeaders = users.filter(u => u.rol === 'area');
+            if (areaLeaders.length === 0) {
+                elements.generalLeadersAreaTable.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay líderes de área registrados aún.</td></tr>`;
+            } else {
+                areaLeaders.forEach(leader => {
+                    const supervisor = users.find(u => u.uid === leader.grupoId);
+                    const supervisorName = supervisor ? supervisor.nombreGrupo : 'Sin vincular';
+
+                    const isOnline = leader.conectado === true;
+                    const statusBadge = isOnline 
+                        ? `<span class="profile-badge" style="background:hsla(145, 80%, 40%, 0.15);color:var(--color-success);border-color:hsla(145, 80%, 40%, 0.3)">ACTIVO (ONLINE)</span>`
+                        : `<span class="profile-badge" style="background:rgba(255,255,255,0.05);color:var(--color-text-muted);border-color:rgba(255,255,255,0.1)">INACTIVO</span>`;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${leader.nombreGrupo}</strong></td>
+                        <td>${leader.liderName}</td>
+                        <td>${supervisorName}</td>
+                        <td>${leader.telefono}<br><span style="font-size:0.8rem;color:var(--color-text-muted)">${leader.email}</span></td>
+                        <td><span class="profile-badge">${leader.distrito}</span></td>
+                        <td>${statusBadge}</td>
+                    `;
+                    elements.generalLeadersAreaTable.appendChild(tr);
+                });
+            }
+        }
+
         // 3. Render Documents list with delete button
         elements.generalUploadedDocs.innerHTML = '';
         if (docs.length === 0) {
@@ -977,6 +1063,30 @@ async function loadGroupDashboard() {
                 `;
                 elements.groupAreasTable.appendChild(tr);
             });
+        }
+
+        // Render Group Participants Table
+        if (elements.groupMembersTable) {
+            elements.groupMembersTable.innerHTML = '';
+            if (groupMembers.length === 0) {
+                elements.groupMembersTable.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--color-text-muted)">No hay participantes registrados en sus áreas aún.</td></tr>`;
+            } else {
+                groupMembers.forEach(mem => {
+                    const areaLeader = areaLeaders.find(al => al.uid === mem.areaLiderId);
+                    const areaName = areaLeader ? areaLeader.nombreGrupo : 'Desconocido';
+                    const district = mem.distrito || (areaLeader ? areaLeader.distrito : 'Sin distrito');
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${mem.nombreCompleto}</strong></td>
+                        <td>${mem.telefono}<br><span style="font-size:0.8rem;color:var(--color-text-muted)">${mem.correo || 'Sin correo'}</span></td>
+                        <td>${areaName}</td>
+                        <td><span class="profile-badge">${district}</span></td>
+                        <td><span class="profile-badge" style="background:hsla(145, 80%, 40%, 0.15);color:var(--color-success);border-color:hsla(145, 80%, 40%, 0.3);text-transform:uppercase;font-size:0.7rem">${mem.estado || 'activo'}</span></td>
+                    `;
+                    elements.groupMembersTable.appendChild(tr);
+                });
+            }
         }
 
         // Render Compact Meetings List
