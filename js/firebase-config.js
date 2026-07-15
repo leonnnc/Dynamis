@@ -7,8 +7,8 @@ const INITIAL_MOCK_DATA = {
             uid: "super-admin",
             email: "admin@dynamis.com",
             password: "AdminCDF26",
-            nombreGrupo: "Super Administración",
-            liderName: "Super Administrador",
+            nombreGrupo: "Super Liderazgo",
+            liderName: "Super Líder",
             direccionReunion: "Sede Central",
             telefono: "999999999",
             distrito: "Miraflores",
@@ -94,13 +94,16 @@ if (!localDbStored) {
                 uid: "super-admin",
                 email: "admin@dynamis.com",
                 password: "AdminCDF26",
-                nombreGrupo: "Super Administración",
-                liderName: "Super Administrador",
+                nombreGrupo: "Super Liderazgo",
+                liderName: "Super Líder",
                 direccionReunion: "Sede Central",
                 telefono: "999999999",
                 distrito: "Miraflores",
                 rol: "admin"
             });
+        } else {
+            adminUser.liderName = "Super Líder";
+            adminUser.nombreGrupo = "Super Liderazgo";
         }
         
         localStorage.setItem("dynamis_local_db", JSON.stringify(dbParsed));
