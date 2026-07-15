@@ -38,6 +38,7 @@ const elements = {
     groupMembersTable: document.getElementById('group-members-table')?.querySelector('tbody'),
     generalActiveUsers: document.getElementById('general-active-users'),
     generalUploadedDocs: document.getElementById('general-uploaded-docs'),
+    generalPublishedThemes: document.getElementById('general-published-themes'),
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
     fileNameChosen: document.getElementById('file-name-chosen'),
@@ -890,6 +891,44 @@ async function loadGeneralDashboard() {
                 
                 elements.generalUploadedDocs.appendChild(li);
             });
+        }
+
+        // 3.b Render Themes list with delete button
+        if (elements.generalPublishedThemes) {
+            elements.generalPublishedThemes.innerHTML = '';
+            if (themes.length === 0) {
+                elements.generalPublishedThemes.innerHTML = `<li style="padding:10px;text-align:center;color:var(--color-text-muted);font-size:0.85rem">No hay temas publicados.</li>`;
+            } else {
+                themes.forEach(theme => {
+                    const li = document.createElement('li');
+                    li.style.display = 'flex';
+                    li.style.justifyContent = 'space-between';
+                    li.style.alignItems = 'center';
+                    li.style.padding = '6px 10px';
+                    li.style.background = 'rgba(255,255,255,0.02)';
+                    li.style.borderRadius = '4px';
+                    li.style.border = '1px solid rgba(255,255,255,0.05)';
+                    li.innerHTML = `
+                        <div style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-weight:600;font-size:0.85rem">${theme.titulo}</span>
+                            <span style="font-size:0.7rem;color:var(--color-text-muted)">Publicado: ${theme.fecha}</span>
+                        </div>
+                        <button class="delete-theme-btn" data-id="${theme.id}" style="background:transparent;border:none;color:var(--color-danger);font-size:0.75rem;cursor:pointer;padding:4px;">Eliminar</button>
+                    `;
+                    
+                    // Add delete listener
+                    li.querySelector('.delete-theme-btn').addEventListener('click', async (e) => {
+                        const themeId = e.target.getAttribute('data-id');
+                        if (confirm('¿Está seguro de eliminar este tema?')) {
+                            await db.deleteDoc('themes', themeId);
+                            showToast('Tema eliminado', 'info');
+                            loadGeneralDashboard();
+                        }
+                    });
+                    
+                    elements.generalPublishedThemes.appendChild(li);
+                });
+            }
         }
 
         // 4. Render Members Table

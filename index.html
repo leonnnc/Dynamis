@@ -385,7 +385,7 @@
                         <div class="card-header">
                             <h3>Definir Tema de Reunión</h3>
                         </div>
-                        <form id="general-theme-form" class="card-body">
+                        <form id="general-theme-form" class="card-body" style="padding-bottom: 12px;">
                             <div class="form-group">
                                 <label for="theme-title">Título del Tema</label>
                                 <input type="text" id="theme-title" required placeholder="Ej. El Valor de la Perseverancia">
@@ -396,6 +396,12 @@
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm">Publicar Tema Oficial</button>
                         </form>
+                        <div class="theme-list-small" style="padding: 12px 20px; border-top: 1px solid var(--border-color); max-height: 180px; overflow-y: auto;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 0.8rem; color: var(--color-text-muted);">Temas Publicados:</h4>
+                            <ul id="general-published-themes" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Loaded dynamically -->
+                            </ul>
+                        </div>
                     </div>
 
                     <!-- Card: Upload Material (PDF / DOC) -->
