@@ -49,33 +49,10 @@ const INITIAL_MOCK_DATA = {
             grupoId: "grupo-surco"
         }
     ],
-    members: [
-        { id: "mem-1", areaLiderId: "area-surco-a", nombreCompleto: "Juan Pérez", correo: "juan.perez@email.com", telefono: "912345678", estado: "activo" },
-        { id: "mem-2", areaLiderId: "area-surco-a", nombreCompleto: "Lucía Fernández", correo: "lucia.f@email.com", telefono: "923456789", estado: "activo" },
-        { id: "mem-3", areaLiderId: "area-surco-a", nombreCompleto: "Mateo Quispe", correo: "mateo.q@email.com", telefono: "934567890", estado: "activo" },
-        { id: "mem-4", areaLiderId: "area-surco-a", nombreCompleto: "Valeria Alva", correo: "valeria.a@email.com", telefono: "945678901", estado: "activo" }
-    ],
-    themes: [
-        { id: "theme-1", titulo: "Unidad en el Liderazgo", descripcion: "Estudio sobre cómo la colaboración y el trabajo en equipo fortalecen la visión de Dynamis.", creadoPor: "Líder General Supremo", fecha: "2026-07-10" },
-        { id: "theme-2", titulo: "Servicio y Humildad", descripcion: "Cómo el liderazgo efectivo se enfoca en servir a los miembros del área.", creadoPor: "Líder General Supremo", fecha: "2026-07-12" }
-    ],
-    documents: [
-        { id: "doc-1", titulo: "Guía de Liderazgo Vol. 1.pdf", urlSimulada: "#", fechaSubida: "2026-07-11" },
-        { id: "doc-2", titulo: "Manual para Nuevos Líderes de Área.pdf", urlSimulada: "#", fechaSubida: "2026-07-13" }
-    ],
-    meetings: [
-        {
-            id: "meet-1",
-            areaLiderId: "area-surco-a",
-            nombreGrupo: "Dynamis Surco A",
-            distrito: "Santiago de Surco",
-            direccion: "Calle Las Flores 450",
-            fecha: "2026-07-12",
-            hora: "19:30",
-            tema: "Unidad en el Liderazgo",
-            miembrosReunidosCount: 4
-        }
-    ]
+    members: [],
+    themes: [],
+    documents: [],
+    meetings: []
 };
 
 // Check if localStorage has database, otherwise initialize
@@ -83,6 +60,22 @@ let localDbStored = localStorage.getItem("dynamis_local_db");
 if (!localDbStored) {
     localStorage.setItem("dynamis_local_db", JSON.stringify(INITIAL_MOCK_DATA));
 } else {
+    // Purge old simulation/mock data if present, keeping only user accounts
+    try {
+        let dbParsed = JSON.parse(localDbStored);
+        const hasSimulatedData = (dbParsed.members && dbParsed.members.some(m => m.id === "mem-1")) || 
+                                 (dbParsed.documents && dbParsed.documents.some(d => d.id === "doc-1")) ||
+                                 (dbParsed.themes && dbParsed.themes.some(t => t.id === "theme-1"));
+        if (hasSimulatedData) {
+            dbParsed.members = [];
+            dbParsed.themes = [];
+            dbParsed.documents = [];
+            dbParsed.meetings = [];
+            localStorage.setItem("dynamis_local_db", JSON.stringify(dbParsed));
+        }
+    } catch(err) {
+        console.error("Migration error:", err);
+    }
     // Self-healing migration to make sure area-surco-a has grupoId and admin is injected
     try {
         let dbParsed = JSON.parse(localDbStored);
