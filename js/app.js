@@ -25,7 +25,6 @@ const elements = {
     registerForm: document.getElementById('register-form'),
     registerMemberForm: document.getElementById('register-member-form'),
     loginForm: document.getElementById('login-form'),
-    generalThemeForm: document.getElementById('general-theme-form'),
     generalDocForm: document.getElementById('general-doc-form'),
     areaMemberForm: document.getElementById('area-member-form'),
     areaMeetingForm: document.getElementById('area-meeting-form'),
@@ -38,7 +37,6 @@ const elements = {
     groupMembersTable: document.getElementById('group-members-table')?.querySelector('tbody'),
     generalActiveUsers: document.getElementById('general-active-users'),
     generalUploadedDocs: document.getElementById('general-uploaded-docs'),
-    generalPublishedThemes: document.getElementById('general-published-themes'),
     generalWelcome: document.getElementById('general-welcome'),
     docFileInput: document.getElementById('doc-file'),
     fileNameChosen: document.getElementById('file-name-chosen'),
@@ -60,7 +58,6 @@ const elements = {
     areaMembersList: document.getElementById('area-members-list'),
     areaMeetingsScheduled: document.getElementById('area-meetings-scheduled'),
     areaDownloadableDocs: document.getElementById('area-downloadable-docs'),
-    meetThemeSelect: document.getElementById('meet-theme'),
     
     // Carousel
     carouselSlides: document.getElementById('carousel-slides'),
@@ -388,8 +385,7 @@ function setupEventListeners() {
     // Login Form
     elements.loginForm?.addEventListener('submit', handleLogin);
 
-    // General: Add Theme Form
-    elements.generalThemeForm?.addEventListener('submit', handleAddTheme);
+
 
     // General: Add Doc Form
     elements.generalDocForm?.addEventListener('submit', handleAddDoc);
@@ -921,43 +917,7 @@ async function loadGeneralDashboard() {
             });
         }
 
-        // 3.b Render Themes list with delete button
-        if (elements.generalPublishedThemes) {
-            elements.generalPublishedThemes.innerHTML = '';
-            if (themes.length === 0) {
-                elements.generalPublishedThemes.innerHTML = `<li style="padding:10px;text-align:center;color:var(--color-text-muted);font-size:0.85rem">No hay temas publicados.</li>`;
-            } else {
-                themes.forEach(theme => {
-                    const li = document.createElement('li');
-                    li.style.display = 'flex';
-                    li.style.justifyContent = 'space-between';
-                    li.style.alignItems = 'center';
-                    li.style.padding = '6px 10px';
-                    li.style.background = 'rgba(255,255,255,0.02)';
-                    li.style.borderRadius = '4px';
-                    li.style.border = '1px solid rgba(255,255,255,0.05)';
-                    li.innerHTML = `
-                        <div style="display:flex;flex-direction:column;gap:2px">
-                            <span style="font-weight:600;font-size:0.85rem">${theme.titulo}</span>
-                            <span style="font-size:0.7rem;color:var(--color-text-muted)">Publicado: ${theme.fecha}</span>
-                        </div>
-                        <button class="delete-theme-btn" data-id="${theme.id}" style="background:transparent;border:none;color:var(--color-danger);font-size:0.75rem;cursor:pointer;padding:4px;">Eliminar</button>
-                    `;
-                    
-                    // Add delete listener
-                    li.querySelector('.delete-theme-btn').addEventListener('click', async (e) => {
-                        const themeId = e.target.getAttribute('data-id');
-                        if (confirm('¿Está seguro de eliminar este tema?')) {
-                            await db.deleteDoc('themes', themeId);
-                            showToast('Tema eliminado', 'info');
-                            loadGeneralDashboard();
-                        }
-                    });
-                    
-                    elements.generalPublishedThemes.appendChild(li);
-                });
-            }
-        }
+
 
         // 4. Render Members Table
         elements.generalMembersTable.innerHTML = '';
@@ -1031,27 +991,7 @@ async function loadGeneralDashboard() {
     }
 }
 
-async function handleAddTheme(e) {
-    e.preventDefault();
-    const title = document.getElementById('theme-title').value;
-    const desc = document.getElementById('theme-desc').value;
 
-    try {
-        const newTheme = {
-            titulo: title,
-            descripcion: desc,
-            creadoPor: currentUser.liderName,
-            fecha: new Date().toISOString().split('T')[0]
-        };
-
-        await db.addDoc('themes', newTheme);
-        showToast('Tema oficial publicado exitosamente', 'success');
-        elements.generalThemeForm.reset();
-        loadGeneralDashboard();
-    } catch (err) {
-        showToast('Error al crear tema: ' + err.message, 'error');
-    }
-}
 
 async function handleAddDoc(e) {
     e.preventDefault();
@@ -1205,18 +1145,7 @@ async function loadAreaDashboard() {
         const myMembers = allMembers.filter(m => m.areaLiderId === currentUser.uid || (currentUser.uid.startsWith('usr-') && m.areaLiderId === currentUser.uid));
         const myMeetings = allMeetings.filter(meet => meet.areaLiderId === currentUser.uid);
 
-        // 1. Populate Themes Selector
-        elements.meetThemeSelect.innerHTML = `<option value="" disabled selected>Selecciona el tema oficial</option>`;
-        if (themes.length === 0) {
-            elements.meetThemeSelect.innerHTML += `<option value="Tema Libre">Tema Libre (General no ha definido)</option>`;
-        } else {
-            themes.forEach(theme => {
-                const opt = document.createElement('option');
-                opt.value = theme.titulo;
-                opt.textContent = theme.titulo;
-                elements.meetThemeSelect.appendChild(opt);
-            });
-        }
+
 
         // Set default values for meeting form address
         const locationInput = document.getElementById('meet-location');

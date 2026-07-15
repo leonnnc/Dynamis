@@ -381,29 +381,7 @@
 
                 <!-- Right: Theme Setup & Document Upload -->
                 <div class="dash-side">
-                    <!-- Card: Publish Weekly Theme -->
-                    <div class="card" style="margin-bottom: 24px;">
-                        <div class="card-header">
-                            <h3>Definir Tema de Reunión</h3>
-                        </div>
-                        <form id="general-theme-form" class="card-body" style="padding-bottom: 12px;">
-                            <div class="form-group">
-                                <label for="theme-title">Título del Tema</label>
-                                <input type="text" id="theme-title" required placeholder="Ej. El Valor de la Perseverancia">
-                            </div>
-                            <div class="form-group">
-                                <label for="theme-desc">Instrucciones / Puntos Clave</label>
-                                <textarea id="theme-desc" required placeholder="Breve resumen para los líderes..." rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Publicar Tema Oficial</button>
-                        </form>
-                        <div class="theme-list-small" style="padding: 12px 20px; border-top: 1px solid var(--border-color); max-height: 180px; overflow-y: auto;">
-                            <h4 style="margin: 0 0 8px 0; font-size: 0.8rem; color: var(--color-text-muted);">Temas Publicados:</h4>
-                            <ul id="general-published-themes" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-                                <!-- Loaded dynamically -->
-                            </ul>
-                        </div>
-                    </div>
+
 
                     <!-- Card: Upload Material (PDF / DOC) -->
                     <div class="card" style="margin-bottom: 24px;">
@@ -664,10 +642,7 @@
                     <form id="area-meeting-form" class="card-body">
                         <div class="form-group">
                             <label for="meet-theme">Tema de la Reunión</label>
-                            <select id="meet-theme" required>
-                                <option value="" disabled selected>Selecciona el tema oficial</option>
-                                <!-- Loaded dynamically from General Leader themes -->
-                            </select>
+                            <input type="text" id="meet-theme" required placeholder="Ej. Unidad y Perseverancia" style="padding: 8px;">
                         </div>
                         <div class="form-group">
                             <label for="meet-date">Fecha</label>
