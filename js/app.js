@@ -239,33 +239,43 @@ window.addEventListener('beforeunload', () => {
 });
 
 function updateNavState(isLoggedIn) {
-    const createLeaderItem = document.getElementById('nav-create-leader');
+    const dashboardItem = document.getElementById('nav-dashboard-item');
+    const dashboardLink = document.getElementById('nav-dashboard-link');
+    const shareItem = document.getElementById('nav-share-item');
+    const createLeaderItem = document.getElementById('nav-create-leader-item');
     const registerItem = document.getElementById('nav-register-item');
-    if (isLoggedIn && currentUser) {
-        elements.navProfile.classList.remove('hidden');
-        elements.navLoginBtn.classList.add('hidden');
-        elements.profileBadgeRole.textContent = getRoleName(currentUser.rol);
-        
-        // Change login link in nav to point to dashboard
-        elements.navLoginBtn.textContent = 'Dashboard';
-        elements.navLoginBtn.setAttribute('href', `#dashboard-${currentUser.rol === 'admin' ? 'general' : currentUser.rol}`);
-        elements.navLoginBtn.classList.remove('hidden');
+    const loginItem = document.getElementById('nav-login-item');
 
-        // Hide public registration link since they are logged in
+    if (isLoggedIn && currentUser) {
+        // Show profile & role badge
+        elements.navProfile.classList.remove('hidden');
+        elements.profileBadgeRole.textContent = getRoleName(currentUser.rol);
+
+        // Hide Acceder and Registrarse
+        if (loginItem) loginItem.classList.add('hidden');
         if (registerItem) registerItem.classList.add('hidden');
 
-        // Toggle unified create group/leader link in navbar
+        // Setup Dashboard Link
+        if (dashboardItem && dashboardLink) {
+            dashboardItem.classList.remove('hidden');
+            dashboardLink.setAttribute('href', `#dashboard-${currentUser.rol === 'admin' ? 'general' : currentUser.rol}`);
+        }
+
+        // Toggle "Compartir" & "Crear Grupos" links (only for Super Leader/General Leader)
         if (currentUser.rol === 'admin' || currentUser.rol === 'general') {
+            if (shareItem) shareItem.classList.remove('hidden');
             if (createLeaderItem) createLeaderItem.classList.remove('hidden');
         } else {
+            if (shareItem) shareItem.classList.add('hidden');
             if (createLeaderItem) createLeaderItem.classList.add('hidden');
         }
     } else {
+        // Hide profile & dashboard links, show Acceder & Registrarse
         elements.navProfile.classList.add('hidden');
-        elements.navLoginBtn.textContent = 'Acceder';
-        elements.navLoginBtn.setAttribute('href', '#login');
-        elements.navLoginBtn.classList.remove('hidden');
+        if (loginItem) loginItem.classList.remove('hidden');
         if (registerItem) registerItem.classList.remove('hidden');
+        if (dashboardItem) dashboardItem.classList.add('hidden');
+        if (shareItem) shareItem.classList.add('hidden');
         if (createLeaderItem) createLeaderItem.classList.add('hidden');
     }
 }
@@ -447,8 +457,22 @@ function setupEventListeners() {
     // Unified: Group / Leader Registration Form Submission
     elements.unifiedRegForm?.addEventListener('submit', handleUnifiedRegisterSubmit);
 
-    // Nav Link: Scroll to Unified Registration Card
-    document.getElementById('nav-create-leader-btn')?.addEventListener('click', (e) => {
+    // Nav Link: Scroll to Support Material Upload Card ("Compartir")
+    document.getElementById('nav-share-link')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const card = document.getElementById('general-doc-form')?.closest('.card');
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.style.transition = 'box-shadow 0.4s ease';
+            card.style.boxShadow = '0 0 25px var(--color-accent)';
+            setTimeout(() => {
+                card.style.boxShadow = 'var(--card-shadow)';
+            }, 1800);
+        }
+    });
+
+    // Nav Link: Scroll to Unified Registration Card ("Crear Grupos")
+    document.getElementById('nav-create-leader-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         const card = document.getElementById('unified-registration-card');
         if (card) {
