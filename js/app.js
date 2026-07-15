@@ -242,6 +242,7 @@ window.addEventListener('beforeunload', () => {
 });
 
 function updateNavState(isLoggedIn) {
+    const createLeaderItem = document.getElementById('nav-create-leader');
     if (isLoggedIn && currentUser) {
         elements.navProfile.classList.remove('hidden');
         elements.navLoginBtn.classList.add('hidden');
@@ -251,11 +252,19 @@ function updateNavState(isLoggedIn) {
         elements.navLoginBtn.textContent = 'Dashboard';
         elements.navLoginBtn.setAttribute('href', `#dashboard-${currentUser.rol === 'admin' ? 'general' : currentUser.rol}`);
         elements.navLoginBtn.classList.remove('hidden');
+
+        // Toggle unified create group/leader link in navbar
+        if (currentUser.rol === 'admin' || currentUser.rol === 'general') {
+            if (createLeaderItem) createLeaderItem.classList.remove('hidden');
+        } else {
+            if (createLeaderItem) createLeaderItem.classList.add('hidden');
+        }
     } else {
         elements.navProfile.classList.add('hidden');
         elements.navLoginBtn.textContent = 'Acceder';
         elements.navLoginBtn.setAttribute('href', '#login');
         elements.navLoginBtn.classList.remove('hidden');
+        if (createLeaderItem) createLeaderItem.classList.add('hidden');
     }
 }
 
@@ -436,6 +445,20 @@ function setupEventListeners() {
 
     // Unified: Group / Leader Registration Form Submission
     elements.unifiedRegForm?.addEventListener('submit', handleUnifiedRegisterSubmit);
+
+    // Nav Link: Scroll to Unified Registration Card
+    document.getElementById('nav-create-leader-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const card = document.getElementById('unified-registration-card');
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.style.transition = 'box-shadow 0.4s ease';
+            card.style.boxShadow = '0 0 25px var(--color-accent)';
+            setTimeout(() => {
+                card.style.boxShadow = 'var(--card-shadow)';
+            }, 1800);
+        }
+    });
 
     // Directory Control Center Tab Switching Listener
     document.addEventListener('click', (e) => {
