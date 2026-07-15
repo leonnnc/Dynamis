@@ -142,18 +142,17 @@ function initRouter() {
 function handleRoute() {
     const hash = window.location.hash || '#home';
     const sectionId = hash.substring(1);
-    
-    // Validation: prevent accessing dashboards without login
-    if (sectionId.startsWith('dashboard-')) {
+    // Validation: prevent accessing dashboards or administrative views without login
+    if (sectionId.startsWith('dashboard-') || sectionId === 'section-share' || sectionId === 'section-create-groups') {
         if (!currentUser) {
             window.location.hash = '#login';
             showToast('Debe iniciar sesión para acceder al panel', 'error');
             return;
         }
         
-        // Match dashboard to role
+        // Match dashboard/views to role privileges
         const role = currentUser.rol;
-        if (sectionId === 'dashboard-general' && role !== 'general' && role !== 'admin') {
+        if ((sectionId === 'dashboard-general' || sectionId === 'section-share' || sectionId === 'section-create-groups') && role !== 'general' && role !== 'admin') {
             window.location.hash = `#dashboard-${role === 'admin' ? 'general' : role}`;
             return;
         }
@@ -184,7 +183,7 @@ function handleRoute() {
     });
 
     // Load data for dashboards if active
-    if (sectionId === 'dashboard-general') {
+    if (sectionId === 'dashboard-general' || sectionId === 'section-share' || sectionId === 'section-create-groups') {
         loadGeneralDashboard();
     } else if (sectionId === 'dashboard-grupo') {
         loadGroupDashboard();
@@ -457,33 +456,7 @@ function setupEventListeners() {
     // Unified: Group / Leader Registration Form Submission
     elements.unifiedRegForm?.addEventListener('submit', handleUnifiedRegisterSubmit);
 
-    // Nav Link: Scroll to Support Material Upload Card ("Compartir")
-    document.getElementById('nav-share-link')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const card = document.getElementById('general-doc-form')?.closest('.card');
-        if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            card.style.transition = 'box-shadow 0.4s ease';
-            card.style.boxShadow = '0 0 25px var(--color-accent)';
-            setTimeout(() => {
-                card.style.boxShadow = 'var(--card-shadow)';
-            }, 1800);
-        }
-    });
 
-    // Nav Link: Scroll to Unified Registration Card ("Crear Grupos")
-    document.getElementById('nav-create-leader-link')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const card = document.getElementById('unified-registration-card');
-        if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            card.style.transition = 'box-shadow 0.4s ease';
-            card.style.boxShadow = '0 0 25px var(--color-accent)';
-            setTimeout(() => {
-                card.style.boxShadow = 'var(--card-shadow)';
-            }, 1800);
-        }
-    });
 
     // Directory Control Center Tab Switching Listener
     document.addEventListener('click', (e) => {

@@ -28,8 +28,8 @@
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link active" data-section="home">Inicio</a></li>
                     <li class="hidden" id="nav-dashboard-item"><a href="#" class="nav-link" id="nav-dashboard-link">Dashboard</a></li>
-                    <li class="hidden" id="nav-share-item"><a href="#" class="nav-link" id="nav-share-link">Compartir</a></li>
-                    <li class="hidden" id="nav-create-leader-item"><a href="#" class="nav-link" id="nav-create-leader-link">Crear Grupos</a></li>
+                    <li class="hidden" id="nav-share-item"><a href="#section-share" class="nav-link" id="nav-share-link" data-section="section-share">Compartir</a></li>
+                    <li class="hidden" id="nav-create-leader-item"><a href="#section-create-groups" class="nav-link" id="nav-create-leader-link" data-section="section-create-groups">Crear Grupos</a></li>
                     <li id="nav-register-item"><a href="#register" class="nav-link" data-section="register">Registrarse</a></li>
                     <li id="nav-login-item"><a href="#login" class="nav-link" data-section="login" id="nav-login-btn">Acceder</a></li>
                     <!-- Profile indicator shown when logged in -->
@@ -381,37 +381,8 @@
                     </div>
                 </div>
 
-                <!-- Right: Theme Setup & Document Upload -->
+                <!-- Right: Conexión de Líderes -->
                 <div class="dash-side">
-
-
-                    <!-- Card: Upload Material (PDF / DOC) -->
-                    <div class="card" style="margin-bottom: 24px;">
-                        <div class="card-header">
-                            <h3>Compartir Documentos de Apoyo</h3>
-                        </div>
-                        <form id="general-doc-form" class="card-body">
-                            <div class="form-group">
-                                <label for="doc-title">Título de la Guía o Documento</label>
-                                <input type="text" id="doc-title" required placeholder="Ej. Guía Semanal - Julio 2026">
-                            </div>
-                            <div class="form-group">
-                                <label for="doc-file" class="file-label-btn">
-                                    <span>Seleccionar Archivo</span>
-                                    <input type="file" id="doc-file" required>
-                                </label>
-                                <span class="file-name-indicator" id="file-name-chosen">Ningún archivo seleccionado</span>
-                            </div>
-                            <button type="submit" class="btn btn-accent btn-sm btn-block">Subir y Publicar Material</button>
-                        </form>
-                        <div class="doc-list-small">
-                            <h4>Documentos Compartidos:</h4>
-                            <ul id="general-uploaded-docs">
-                                <!-- Loaded dynamically -->
-                            </ul>
-                        </div>
-                    </div>
-
                     <!-- Card: Active Leaders Status -->
                     <div class="card" style="margin-bottom: 24px;">
                         <div class="card-header">
@@ -423,58 +394,107 @@
                             </ul>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Card: Unified Group / Leader Registration -->
-                    <div class="card" id="unified-registration-card" style="margin-bottom: 24px;">
-                        <div class="card-header">
-                            <h3 id="unified-reg-title">Crear Nuevo Grupo / Líder</h3>
-                        </div>
-                        <form id="unified-registration-form" class="card-body">
-                            <div class="form-group" id="unified-role-group" style="margin-bottom: 12px;">
-                                <label for="unified-role" style="font-size:0.8rem;">Tipo de Registro</label>
-                                <select id="unified-role" required style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
-                                    <option value="area" selected>Líder de Área</option>
-                                    <option value="grupo">Líder General (Grupo)</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-group-name" id="label-group-name" style="font-size:0.8rem;">Nombre de la Nueva Área</label>
-                                <input type="text" id="unified-group-name" required placeholder="Ej. Dynamis Surco C" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-leader-name" id="label-leader-name" style="font-size:0.8rem;">Nombre del Líder</label>
-                                <input type="text" id="unified-leader-name" required placeholder="Ej. Sofía Ruiz" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" id="unified-address-group" style="margin-bottom: 12px;">
-                                <label for="unified-address" style="font-size:0.8rem;">Dirección de Reunión</label>
-                                <input type="text" id="unified-address" placeholder="Ej. Av. Caminos del Inca 320" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-email" style="font-size:0.8rem;">Correo Electrónico</label>
-                                <input type="email" id="unified-email" required placeholder="correo@dynamis.com" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
-                                <input type="tel" id="unified-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-district" style="font-size:0.8rem;">Distrito</label>
-                                <input type="text" id="unified-district" required placeholder="Ej. Santiago de Surco" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="unified-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
-                                <input type="password" id="unified-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
-                            </div>
-                            <div class="form-group" id="unified-group-link-group" style="margin-bottom: 12px;">
-                                <label for="unified-group-link" style="font-size:0.8rem;">Vincular a Grupo General</label>
-                                <select id="unified-group-link" style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
-                                    <option value="" disabled selected>Selecciona el grupo supervisor</option>
-                                    <!-- Loaded dynamically -->
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-accent btn-sm btn-block" id="unified-btn-text">Registrar Área y Líder</button>
-                        </form>
+        <!-- SECTION: COMPARTIR (Compartir Documentos de Apoyo) -->
+        <section id="section-share" class="app-section" style="display: none; padding: 40px 0;">
+            <div class="container" style="max-width: 800px;">
+                <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+                    <span class="badge badge-accent">Biblioteca de Recursos</span>
+                    <h2 style="margin-top: 10px;">Compartir Documentos de Apoyo</h2>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 5px;">Sube, comparte y gestiona guías oficiales para todos los líderes de Dynamis.</p>
+                </div>
+                
+                <!-- Card: Upload Material (PDF / DOC) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Subir Nuevo Material de Apoyo</h3>
                     </div>
+                    <form id="general-doc-form" class="card-body">
+                        <div class="form-group">
+                            <label for="doc-title">Título de la Guía o Documento</label>
+                            <input type="text" id="doc-title" required placeholder="Ej. Guía Semanal - Julio 2026">
+                        </div>
+                        <div class="form-group">
+                            <label for="doc-file" class="file-label-btn">
+                                <span>Seleccionar Archivo</span>
+                                <input type="file" id="doc-file" required>
+                            </label>
+                            <span class="file-name-indicator" id="file-name-chosen">Ningún archivo seleccionado</span>
+                        </div>
+                        <button type="submit" class="btn btn-accent btn-sm btn-block">Subir y Publicar Material</button>
+                    </form>
+                    <div class="doc-list-small" style="padding: 20px; border-top: 1px solid var(--border-color);">
+                        <h4>Documentos Compartidos:</h4>
+                        <ul id="general-uploaded-docs">
+                            <!-- Loaded dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: CREAR GRUPOS (Crear Nuevo Grupo / Líder) -->
+        <section id="section-create-groups" class="app-section" style="display: none; padding: 40px 0;">
+            <div class="container" style="max-width: 800px;">
+                <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+                    <span class="badge badge-accent">Estructura Organizacional</span>
+                    <h2 style="margin-top: 10px;">Crear Nuevo Grupo / Líder</h2>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 5px;">Registra y asigna nuevos Líderes Generales o Líderes de Área en el sistema.</p>
+                </div>
+
+                <!-- Card: Unified Group / Leader Registration -->
+                <div class="card" id="unified-registration-card">
+                    <div class="card-header">
+                        <h3 id="unified-reg-title">Registrar Nuevo Líder</h3>
+                    </div>
+                    <form id="unified-registration-form" class="card-body">
+                        <div class="form-group" id="unified-role-group" style="margin-bottom: 12px;">
+                            <label for="unified-role" style="font-size:0.8rem;">Tipo de Registro</label>
+                            <select id="unified-role" required style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
+                                <option value="area" selected>Líder de Área</option>
+                                <option value="grupo">Líder General (Grupo)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-group-name" id="label-group-name" style="font-size:0.8rem;">Nombre de la Nueva Área</label>
+                            <input type="text" id="unified-group-name" required placeholder="Ej. Dynamis Surco C" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-leader-name" id="label-leader-name" style="font-size:0.8rem;">Nombre del Líder</label>
+                            <input type="text" id="unified-leader-name" required placeholder="Ej. Sofía Ruiz" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" id="unified-address-group" style="margin-bottom: 12px;">
+                            <label for="unified-address" style="font-size:0.8rem;">Dirección de Reunión</label>
+                            <input type="text" id="unified-address" placeholder="Ej. Av. Caminos del Inca 320" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-email" style="font-size:0.8rem;">Correo Electrónico</label>
+                            <input type="email" id="unified-email" required placeholder="correo@dynamis.com" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-phone" style="font-size:0.8rem;">Teléfono / Celular</label>
+                            <input type="tel" id="unified-phone" required placeholder="Ej. 987654321" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-district" style="font-size:0.8rem;">Distrito</label>
+                            <input type="text" id="unified-district" required placeholder="Ej. Santiago de Surco" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="unified-password" style="font-size:0.8rem;">Contraseña de Acceso</label>
+                            <input type="password" id="unified-password" required placeholder="Mínimo 6 caracteres" style="padding: 8px;">
+                        </div>
+                        <div class="form-group" id="unified-group-link-group" style="margin-bottom: 12px;">
+                            <label for="unified-group-link" style="font-size:0.8rem;">Vincular a Grupo General</label>
+                            <select id="unified-group-link" style="padding: 8px; width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: #fff;">
+                                <option value="" disabled selected>Selecciona el grupo supervisor</option>
+                                <!-- Loaded dynamically -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-accent btn-sm btn-block" id="unified-btn-text">Registrar Área y Líder</button>
+                    </form>
                 </div>
             </div>
         </section>
