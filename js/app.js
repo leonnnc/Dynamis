@@ -243,6 +243,7 @@ window.addEventListener('beforeunload', () => {
 
 function updateNavState(isLoggedIn) {
     const createLeaderItem = document.getElementById('nav-create-leader');
+    const registerItem = document.getElementById('nav-register-item');
     if (isLoggedIn && currentUser) {
         elements.navProfile.classList.remove('hidden');
         elements.navLoginBtn.classList.add('hidden');
@@ -252,6 +253,9 @@ function updateNavState(isLoggedIn) {
         elements.navLoginBtn.textContent = 'Dashboard';
         elements.navLoginBtn.setAttribute('href', `#dashboard-${currentUser.rol === 'admin' ? 'general' : currentUser.rol}`);
         elements.navLoginBtn.classList.remove('hidden');
+
+        // Hide public registration link since they are logged in
+        if (registerItem) registerItem.classList.add('hidden');
 
         // Toggle unified create group/leader link in navbar
         if (currentUser.rol === 'admin' || currentUser.rol === 'general') {
@@ -264,6 +268,7 @@ function updateNavState(isLoggedIn) {
         elements.navLoginBtn.textContent = 'Acceder';
         elements.navLoginBtn.setAttribute('href', '#login');
         elements.navLoginBtn.classList.remove('hidden');
+        if (registerItem) registerItem.classList.remove('hidden');
         if (createLeaderItem) createLeaderItem.classList.add('hidden');
     }
 }
