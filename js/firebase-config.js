@@ -19,7 +19,7 @@ const INITIAL_MOCK_DATA = {
             email: "general@dynamis.com",
             password: "general123",
             nombreGrupo: "Directorio General",
-            liderName: "Líder General Supremo",
+            liderName: "Líder General",
             direccionReunion: "Sede Central Miraflores",
             telefono: "999888777",
             distrito: "Miraflores",
