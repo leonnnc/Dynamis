@@ -698,7 +698,7 @@ async function handleLogin(e) {
 async function loadGeneralDashboard() {
     if (!currentUser) return;
     
-    elements.generalWelcome.textContent = `Bienvenido al control central, ${currentUser.liderName}`;
+    elements.generalWelcome.textContent = 'Bienvenido al control central';
     
     try {
         // Load data from DB
